@@ -22,7 +22,7 @@
     <option name="FILTER_BY_CURRENT_PROJECT" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f1867ec4-521c-4ea0-b120-819c806e94d2" name="Default" comment="Added apk, aar extensions">
+    <list default="true" id="f1867ec4-521c-4ea0-b120-819c806e94d2" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/META-INF/plugin.xml" afterPath="$PROJECT_DIR$/resources/META-INF/plugin.xml" />
     </list>
@@ -40,7 +40,7 @@
       <file leaf-file-name="plugin.kt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/github/b3er/idea/plugins/arc/browser/plugin.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
+            <state relative-caret-position="1309">
               <caret line="93" column="36" lean-forward="false" selection-start-line="93" selection-start-column="36" selection-end-line="93" selection-end-column="36" />
               <folding>
                 <element signature="e#50#894#0" expanded="true" />
@@ -49,21 +49,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FileNameMatcher.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../intellij-community/jps/model-api/src/com/intellij/openapi/fileTypes/FileNameMatcher.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="24" column="17" lean-forward="false" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="plugin.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/resources/META-INF/plugin.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="11" column="21" lean-forward="false" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
+            <state relative-caret-position="213">
+              <caret line="13" column="31" lean-forward="false" selection-start-line="13" selection-start-column="31" selection-end-line="13" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -84,56 +74,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="7939">
               <caret line="467" column="24" lean-forward="false" selection-start-line="467" selection-start-column="24" selection-end-line="467" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FileReferenceHelper.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../intellij-community/platform/analysis-impl/src/com/intellij/psi/impl/source/resolve/reference/impl/providers/FileReferenceHelper.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="34" column="22" lean-forward="false" selection-start-line="34" selection-start-column="22" selection-end-line="34" selection-end-column="22" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BinaryFileStubBuilder.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../intellij-community/platform/core-api/src/com/intellij/psi/stubs/BinaryFileStubBuilder.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="29" column="17" lean-forward="false" selection-start-line="29" selection-start-column="17" selection-end-line="29" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PlatformExtensionPoints.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../intellij-community/platform/platform-resources/src/META-INF/PlatformExtensionPoints.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1326">
-              <caret line="78" column="101" lean-forward="false" selection-start-line="78" selection-start-column="101" selection-end-line="78" selection-end-column="101" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FileTypeRegistrator.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../intellij-community/platform/platform-api/src/com/intellij/ide/highlighter/FileTypeRegistrator.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="20" column="17" lean-forward="false" selection-start-line="20" selection-start-column="17" selection-end-line="20" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BinaryFileDecompiler.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../intellij-community/platform/core-api/src/com/intellij/openapi/fileTypes/BinaryFileDecompiler.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="24" column="17" lean-forward="false" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -260,8 +200,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -312,6 +250,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
       <pane id="Scope">
         <subPane subId="Project Files">
           <PATH>
@@ -375,7 +315,7 @@
     <property name="node.js.path.for.package.standard" value="project" />
     <property name="node.js.selected.package.standard" value="" />
     <property name="SearchEverywhereHistoryKey" value="Unkno&#9;FILE&#9;file:///Volumes/MainStorage/users/hman/Projects/idea/intellij-community/platform/core-api/src/com/intellij/openapi/fileTypes/UnknownFileType.java&#10;FileManagerIm&#9;PSI&#9;JAVA://com.intellij.psi.impl.file.impl.FileManagerImpl&#10;PsiManagerI&#9;PSI&#9;JAVA://com.intellij.psi.impl.PsiManagerImpl&#10;PsiFile&#9;FILE&#9;file:///Volumes/MainStorage/users/hman/Projects/idea/intellij-community/platform/lang-impl/src/com/intellij/ide/projectView/impl/nodes/PsiFileNode.java&#10;UnknownFileTy&#9;PSI&#9;JAVA://com.intellij.openapi.fileTypes.UnknownFileType&#10;FIleTypeMa&#9;PSI&#9;JAVA://com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl&#10;CoreApp&#9;FILE&#9;file:///Volumes/MainStorage/users/hman/Projects/idea/intellij-community/platform/core-impl/src/com/intellij/core/CoreApplicationEnvironment.java&#10;JarF&#9;FILE&#9;file:///Volumes/MainStorage/users/hman/Projects/idea/intellij-community/platform/platform-impl/src/com/intellij/openapi/vfs/impl/jar/JarFileSystemImpl.java&#10;Archive&#9;FILE&#9;file:///Volumes/MainStorage/users/hman/Projects/idea/intellij-community/platform/platform-api/src/com/intellij/openapi/vfs/newvfs/ArchiveFileSystem.java&#10;ArchiveF&#9;FILE&#9;file:///Volumes/MainStorage/users/hman/Projects/idea/intellij-community/platform/platform-api/src/com/intellij/openapi/vfs/newvfs/ArchiveFileSystem.java&#10;jarHa&#9;FILE&#9;file:///Volumes/MainStorage/users/hman/Projects/idea/intellij-community/platform/platform-impl/src/com/intellij/openapi/vfs/impl/jar/JarHandler.java&#10;psiFileNode&#9;PSI&#9;JAVA://com.intellij.ide.projectView.impl.nodes.PsiFileNode&#10;jarFileS&#9;PSI&#9;JAVA://com.intellij.openapi.vfs.impl.jar.JarFileSystemImpl&#10;JarHa&#9;PSI&#9;JAVA://com.intellij.openapi.vfs.impl.jar.JarHandler&#10;ZipHa&#9;FILE&#9;file:///Volumes/MainStorage/users/hman/Projects/idea/intellij-community/platform/core-impl/src/com/intellij/openapi/vfs/impl/ZipHandler.java&#10;ZipHan&#9;FILE&#9;file:///Volumes/MainStorage/users/hman/Projects/idea/intellij-community/platform/core-impl/src/com/intellij/openapi/vfs/impl/ZipHandler.java&#10;FileManagerI&#9;PSI&#9;JAVA://com.intellij.psi.impl.file.impl.FileManagerImpl&#10;FilemanagerI&#9;PSI&#9;JAVA://com.intellij.psi.impl.file.impl.JavaFileManagerImpl&#10;PsiManager&#9;PSI&#9;JAVA://com.intellij.psi.impl.PsiManagerEx&#10;ProjectViewDirectory&#9;PSI&#9;JAVA://com.intellij.ide.projectView.impl.nodes.ProjectViewDirectoryHelper&#10;PsiDirectoryFactoryIm&#9;PSI&#9;JAVA://com.intellij.psi.impl.file.PsiDirectoryFactoryImpl&#10;JarFi&#9;FILE&#9;file:///Volumes/MainStorage/users/hman/Projects/idea/intellij-community/platform/platform-api/src/com/intellij/openapi/vfs/JarFileSystem.java&#10;PsiBinaryF&#9;PSI&#9;JAVA://com.intellij.psi.PsiBinaryFile&#10;VirtualFIle&#9;FILE&#9;file:///Volumes/MainStorage/users/hman/Projects/idea/intellij-community/platform/core-api/src/com/intellij/openapi/vfs/VirtualFile.java&#10;PsiReferencePro&#9;PSI&#9;JAVA://com.intellij.psi.PsiReferenceProvider&#10;TreeStructureProvider&#9;PSI&#9;JAVA://com.intellij.ide.projectView.TreeStructureProvider&#10;PsiReferenceC&#9;PSI&#9;JAVA://com.intellij.psi.PsiReferenceContributor&#10;FileView&#9;FILE&#9;file:///Volumes/MainStorage/users/hman/Projects/idea/intellij-community/platform/core-api/src/com/intellij/psi/FileViewProvider.java&#10;Vir&#9;FILE&#9;file:///Volumes/MainStorage/users/hman/Projects/idea/intellij-community/platform/core-api/src/com/intellij/openapi/vfs/VirtualFile.java&#10;VirtualFileSys&#9;PSI&#9;JAVA://com.intellij.openapi.vfs.VirtualFileSystem&#10;FileViewPro&#9;PSI&#9;JAVA://com.intellij.psi.FileViewProviderFactory&#10;Psi&#9;ACTION&#9;ActivatePsiViewerToolWindow&#10;NodeF&#9;PSI&#9;JAVA://com.intellij.openapi.graph.builder.util.NodeFactory&#10;FileTypeFactory&#9;PSI&#9;JAVA://com.intellij.openapi.fileTypes.FileTypeExtensionFactory&#10;Folder&#9;PSI&#9;JAVA://com.intellij.icons.AllIcons.Nodes#Folder" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -1095,7 +1035,10 @@
       <workItem from="1487377644004" duration="60000" />
       <workItem from="1487377716617" duration="62000" />
       <workItem from="1487377791086" duration="189000" />
-      <workItem from="1487411923012" duration="32000" />
+      <workItem from="1487411923012" duration="285000" />
+      <workItem from="1487412225348" duration="55000" />
+      <workItem from="1487412295646" duration="94000" />
+      <workItem from="1487412405251" duration="50000" />
     </task>
     <task id="LOCAL-00001" summary="Added apk, aar extensions">
       <created>1487380591494</created>
@@ -1104,11 +1047,18 @@
       <option name="project" value="LOCAL" />
       <updated>1487380591494</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Fixed typo">
+      <created>1487411962969</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1487411962970</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41184000" />
+    <option name="totallyTimeSpent" value="41636000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1119" extended-state="6" />
@@ -1137,8 +1087,8 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run Dashboard" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="PsiViewer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960597" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29795521" sideWeight="0.49361023" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29795521" sideWeight="0.49361023" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32911393" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24973376" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Color Manager" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1162,7 +1112,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added apk, aar extensions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added apk, aar extensions" />
+    <MESSAGE value="Fixed typo" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed typo" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1183,20 +1134,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../intellij-community/platform/core-api/src/com/intellij/pom/Navigatable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="34" column="5" lean-forward="true" selection-start-line="34" selection-start-column="5" selection-end-line="34" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../intellij-community/platform/core-impl/src/com/intellij/psi/impl/file/PsiDirectoryFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="35" column="31" lean-forward="false" selection-start-line="35" selection-start-column="31" selection-end-line="35" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../intellij-community/platform/core-impl/src/com/intellij/psi/impl/file/impl/FileManagerImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="214">
@@ -1331,14 +1268,8 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/com/github/b3er/idea/plugins/arc/browser/PluginTest.kt" />
-    <entry file="jar://$PROJECT_DIR$/idea-archive-browser.jar!/com/github/b3er/idea/plugins/arc/browser/PsiZipDirectoryNode.class" />
-    <entry file="jar://$PROJECT_DIR$/idea-archive-browser.jar!/com/github/b3er/idea/plugins/arc/browser/PsiZipFileNode.class" />
-    <entry file="jar://$PROJECT_DIR$/idea-archive-browser.jar!/com/github/b3er/idea/plugins/arc/browser/ZipFileTypeFactory.class" />
     <entry file="file://$PROJECT_DIR$/.idea/dictionaries/hman.xml" />
     <entry file="file://$PROJECT_DIR$/README.md">
-      <provider editor-type-id="Gfm">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="68">
@@ -1346,6 +1277,9 @@
           </first_editor>
           <second_editor />
         </state>
+      </provider>
+      <provider editor-type-id="Gfm">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/.idea/codeStyleSettings.xml">
@@ -1370,7 +1304,6 @@
       </provider>
     </entry>
     <entry file="jar://$PROJECT_DIR$/idea-archive-browser.jar!/META-INF/MANIFEST.MF" />
-    <entry file="jar://$PROJECT_DIR$/idea-archive-browser.jar!/META-INF/plugin.xml" />
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="156">
@@ -1501,7 +1434,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/github/b3er/idea/plugins/arc/browser/plugin.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
+        <state relative-caret-position="1309">
           <caret line="93" column="36" lean-forward="false" selection-start-line="93" selection-start-column="36" selection-end-line="93" selection-end-column="36" />
           <folding>
             <element signature="e#50#894#0" expanded="true" />
@@ -1509,10 +1442,58 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$PROJECT_DIR$/idea-archive-browser.jar!/com/github/b3er/idea/plugins/arc/browser/PsiZipFileNode.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="19" lean-forward="false" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/idea-archive-browser.jar!/com/github/b3er/idea/plugins/arc/browser/PsiZipDirectoryNode.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="19" lean-forward="false" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/idea-archive-browser.jar!/com/github/b3er/idea/plugins/arc/browser/ZipArchiveStructureProvider.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="19" lean-forward="false" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/idea-archive-browser.jar!/com/github/b3er/idea/plugins/arc/browser/ZipFileTypeFactory.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="19" lean-forward="false" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/idea-archive-browser.jar!/com/github/b3er/idea/plugins/arc/browser/PluginKt.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/idea-archive-browser.jar!/META-INF/plugin.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/resources/META-INF/plugin.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="21" lean-forward="false" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
+        <state relative-caret-position="213">
+          <caret line="13" column="31" lean-forward="false" selection-start-line="13" selection-start-column="31" selection-end-line="13" selection-end-column="31" />
           <folding />
         </state>
       </provider>
