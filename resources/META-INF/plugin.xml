@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.github.b3er.idea.plugins.arc.browser</id>
   <name>Archive browser</name>
-  <version>0.1</version>
+  <version>0.2</version>
   <vendor email="b3er@who.ms" url="https://github.com/b3er/idea-archive-browser">Ilya Usanov</vendor>
 
   <description><![CDATA[
@@ -9,7 +9,8 @@
     ]]></description>
 
   <change-notes><![CDATA[
-      Initial release
+      0.2: Added apk, aar extensions
+      0.1: Initial release
     ]]>
   </change-notes>
 
