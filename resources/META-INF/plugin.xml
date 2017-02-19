@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.github.b3er.idea.plugins.arc.browser</id>
   <name>Archive browser</name>
-  <version>0.4</version>
+  <version>0.5</version>
   <vendor email="b3er@who.ms" url="https://github.com/b3er/idea-archive-browser">Ilya Usanov
   </vendor>
 
@@ -11,6 +11,7 @@
 
   <change-notes><![CDATA[
     <ul>
+      <li>0.5: Added compatibility with AndroidStudio.</li>
       <li>0.4: Fixed formatting.</li>
       <li>0.3: Fixed typo.</li>
       <li>0.2: Added apk, aar extensions.</li>
@@ -20,6 +21,8 @@
   </change-notes>
 
   <idea-version since-build="145.0"/>
+  <depends>com.intellij.modules.lang</depends>
+  <depends>com.intellij.modules.java</depends>
   <extensions defaultExtensionNs="com.intellij">
     <treeStructureProvider
         implementation="com.github.b3er.idea.plugins.arc.browser.ZipArchiveStructureProvider"/>
