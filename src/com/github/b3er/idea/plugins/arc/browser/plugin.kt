@@ -72,7 +72,7 @@ inline private fun BasePsiNode<*>.processChildren(
 }
 
 class PsiZipDirectoryNode(project: Project?, value: PsiDirectory?,
-                          viewSettings: ViewSettings?) : PsiDirectoryNode(project, value, viewSettings, null) {
+                          viewSettings: ViewSettings?) : PsiDirectoryNode(project, value, viewSettings) {
   override fun getChildrenImpl(): MutableCollection<AbstractTreeNode<*>> {
     val project = project
     if (project != null) {
