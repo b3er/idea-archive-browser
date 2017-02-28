@@ -25,6 +25,10 @@ class ZipArchiveStructureProvider : TreeStructureProvider {
     return children.asSequence().map(::convertZipNode).toCollection(
         ArrayList<AbstractTreeNode<*>>())
   }
+
+  override fun getData(selected: MutableCollection<AbstractTreeNode<Any>>?, dataName: String?): Any? {
+    return null
+  }
 }
 
 private fun convertZipNode(node: AbstractTreeNode<*>): AbstractTreeNode<*> {
