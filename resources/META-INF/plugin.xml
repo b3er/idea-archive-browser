@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.github.b3er.idea.plugins.arc.browser</id>
   <name>Archive browser</name>
-  <version>0.6</version>
+  <version>0.7</version>
   <vendor email="b3er@who.ms" url="https://github.com/b3er/idea-archive-browser">Ilya Usanov
   </vendor>
 
@@ -11,6 +11,7 @@
 
   <change-notes><![CDATA[
     <ul>
+      <li>0.7: Fixed compatibility issue with 145 version.</li>
       <li>0.6: Fixed issues.</li>
       <li>0.5: Added compatibility with AndroidStudio.</li>
       <li>0.4: Fixed formatting.</li>
