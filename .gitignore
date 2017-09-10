@@ -56,3 +56,6 @@ gradle-app.setting
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 /*.jar
+/idea-archive-browser.zip
+.idea/codeStyles/
+
