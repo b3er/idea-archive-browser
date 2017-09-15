@@ -205,6 +205,10 @@ class GZipHandler(path: String) : ArchiveHandler(path) {
 }
 
 class GZipFile(private val file: File) {
+  companion object {
+    private val GZ_EXT_PATTERN = "\\.gz$".toRegex()
+  }
+
   var length = 0L
     private set
   var name = ""
@@ -216,7 +220,7 @@ class GZipFile(private val file: File) {
     GZIPInputStream(file.inputStream()).use {
       it.readHeader()
       timestamp = it.modifiedtime
-      name = it.name
+      name = if (!it.name.isNullOrEmpty()) it.name else file.name.replace(GZ_EXT_PATTERN, "")
     }
     //read uncompressed size according to RFC 1952 (http://www.zlib.org/rfc-gzip.html)
     length = RandomAccessFile(file, "r").use {
