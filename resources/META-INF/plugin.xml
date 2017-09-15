@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.github.b3er.idea.plugins.arc.browser</id>
   <name>Archive browser</name>
-  <version>0.9</version>
+  <version>0.10</version>
   <vendor email="b3er@who.ms" url="https://github.com/b3er/idea-archive-browser">Ilya Usanov
   </vendor>
 
@@ -11,6 +11,7 @@
 
   <change-notes><![CDATA[
     <ul>
+      <li>0.10: Fixed issue with GZIP files with empty name in header.</li>
       <li>0.9: Fixed compatibility for Android Studio 3</li>
       <li>0.8: Added GZIP support</li>
       <li>0.7: Fixed compatibility issue with 145 version.</li>
