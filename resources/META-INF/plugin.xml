@@ -11,7 +11,7 @@
 
   <change-notes><![CDATA[
     <ul>
-      <li>0.11: </li>
+      <li>0.11: Extend compatibility to other JB products.</li>
       <li>0.10: Fixed issue with GZIP files with empty name in header.</li>
       <li>0.9: Fixed compatibility for Android Studio 3</li>
       <li>0.8: Added GZIP support</li>

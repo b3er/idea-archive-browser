@@ -13,6 +13,7 @@ import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileSystemItem
+import com.intellij.util.containers.ContainerUtil
 import com.intellij.util.io.FileAccessorCache
 import java.util.*
 
@@ -71,6 +72,13 @@ inline fun <T, R> FileAccessorCache.Handle<T>.use(block: (T) -> R): R {
 class PsiGenericDirectoryNode(project: Project?, value: PsiDirectory?,
     viewSettings: ViewSettings?) : PsiDirectoryNode(project, value, viewSettings) {
   override fun getChildrenImpl(): MutableCollection<AbstractTreeNode<*>> {
-    return super.getChildrenImpl() as MutableCollection<AbstractTreeNode<*>>
+    val project = project
+    if (project != null) {
+      val psiDirectory = value
+      if (psiDirectory != null) {
+        return processChildren(psiDirectory)
+      }
+    }
+    return ContainerUtil.emptyList<AbstractTreeNode<*>>()
   }
 }
