@@ -19,7 +19,7 @@ class ArchivePluginStructureProvider : TreeStructureProvider {
         ArrayList<AbstractTreeNode<*>>())
   }
 
-  override fun getData(selected: MutableCollection<AbstractTreeNode<Any>>?,
+  override fun getData(selected: MutableCollection<AbstractTreeNode<Any>>,
       dataName: String?): Any? {
     return null
   }
