@@ -1,0 +1,17 @@
+<idea-plugin>
+    <id>com.github.b3er.idea.plugins.arc.browser</id>
+    <name>Archive browser</name>
+    <vendor email="b3er@who.ms" url="https://github.com/b3er/idea-archive-browser">Ilya Usanov
+    </vendor>
+    <depends>com.intellij.modules.lang</depends>
+    <extensions defaultExtensionNs="com.intellij">
+        <treeStructureProvider
+                implementation="com.github.b3er.idea.plugins.arc.browser.ArchivePluginStructureProvider"/>
+        <fileTypeFactory
+                implementation="com.github.b3er.idea.plugins.arc.browser.ArchivePluginFileTypeFactory"/>
+        <virtualFileSystem key="gzip"
+                           implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.GZipFileSystemImpl"/>
+    </extensions>
+    <actions>
+    </actions>
+</idea-plugin>
