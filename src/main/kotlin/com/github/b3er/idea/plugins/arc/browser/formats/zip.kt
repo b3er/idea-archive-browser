@@ -6,7 +6,6 @@ import com.intellij.ide.util.treeView.AbstractTreeNode
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.JarFileSystem
 import com.intellij.psi.PsiFile
-import com.intellij.util.containers.isNullOrEmpty
 
 class PsiZipFileNode(project: Project?, value: PsiFile,
     viewSettings: ViewSettings?) : BasePsiFileNode(project, value, viewSettings) {
@@ -16,7 +15,7 @@ class PsiZipFileNode(project: Project?, value: PsiFile,
     return if (parentChildren != null && parentChildren.isNotEmpty()) {
       parentChildren
     } else {
-      getChilderForVirtualFile(virtualFile?.let { JarFileSystem.getInstance().getJarRootForLocalFile(it) })
+      getChildrenForVirtualFile(virtualFile?.let { JarFileSystem.getInstance().getJarRootForLocalFile(it) })
     }
   }
 }

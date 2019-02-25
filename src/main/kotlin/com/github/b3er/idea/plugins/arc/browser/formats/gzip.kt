@@ -30,7 +30,7 @@ class PsiGZipFileNode(project: Project?, value: PsiFile,
     viewSettings: ViewSettings?) : BasePsiFileNode(project, value, viewSettings) {
   override fun getChildrenImpl(): MutableCollection<AbstractTreeNode<*>> {
     val gzipRoot = virtualFile?.let { GZipFileSystem.instance.getGZipRootForLocalFile(it) }
-    return getChilderForVirtualFile(gzipRoot)
+    return getChildrenForVirtualFile(gzipRoot)
   }
 }
 
