@@ -22,8 +22,9 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    pluginName 'Archive browser'
+    pluginName 'idea-archvie-browser'
     version 'IC-191.5701.16'
+    type "IC"
     plugins 'IntelliLang'
 }
 
