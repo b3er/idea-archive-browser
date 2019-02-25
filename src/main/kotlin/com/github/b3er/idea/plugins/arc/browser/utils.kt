@@ -18,90 +18,96 @@ import com.intellij.util.io.FileAccessorCache
 import java.io.Closeable
 import java.util.*
 
-fun processPsiDirectoryChildren(children: Array<PsiElement>,
+fun processPsiDirectoryChildren(
+    children: Array<PsiElement>,
     container: MutableList<AbstractTreeNode<*>>, moduleFileIndex: ModuleFileIndex?,
-    viewSettings: ViewSettings) {
-  for (child in children) {
-    if (child !is PsiFileSystemItem) {
-      continue
+    viewSettings: ViewSettings
+) {
+    for (child in children) {
+        if (child !is PsiFileSystemItem) {
+            continue
+        }
+        val vFile = child.virtualFile ?: continue
+        if (moduleFileIndex != null && !moduleFileIndex.isInContent(vFile)) {
+            continue
+        }
+        if (child is PsiFile) {
+            container.add(PsiFileNode(child.getProject(), child, viewSettings))
+        } else if (child is PsiDirectory) {
+            container.add(PsiGenericDirectoryNode(child.getProject(), child, viewSettings))
+        }
     }
-    val vFile = child.virtualFile ?: continue
-    if (moduleFileIndex != null && !moduleFileIndex.isInContent(vFile)) {
-      continue
-    }
-    if (child is PsiFile) {
-      container.add(PsiFileNode(child.getProject(), child, viewSettings))
-    } else if (child is PsiDirectory) {
-      container.add(PsiGenericDirectoryNode(child.getProject(), child, viewSettings))
-    }
-  }
 }
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun BasePsiNode<*>.processChildren(
-    dir: PsiDirectory): MutableCollection<AbstractTreeNode<*>> {
-  val children = ArrayList<AbstractTreeNode<*>>()
-  val project = dir.project
-  val fileIndex = ProjectRootManager.getInstance(project).fileIndex
-  val module = fileIndex.getModuleForFile(dir.virtualFile)
-  val moduleFileIndex = if (module == null) null else ModuleRootManager.getInstance(
-      module).fileIndex
-  processPsiDirectoryChildren(dir.children, children, moduleFileIndex, settings)
-  return children
+    dir: PsiDirectory
+): MutableCollection<AbstractTreeNode<*>> {
+    val children = ArrayList<AbstractTreeNode<*>>()
+    val project = dir.project
+    val fileIndex = ProjectRootManager.getInstance(project).fileIndex
+    val module = fileIndex.getModuleForFile(dir.virtualFile)
+    val moduleFileIndex = if (module == null) null else ModuleRootManager.getInstance(
+        module
+    ).fileIndex
+    processPsiDirectoryChildren(dir.children, children, moduleFileIndex, settings)
+    return children
 }
 
 inline fun <T, R> FileAccessorCache.Handle<T>.use(block: (T) -> R): R {
-  var released = false
-  try {
-    val value = this.get()
-    return block(value)
-  } catch (e: Exception) {
-    released = true
+    var released = false
     try {
-      this.release()
-    } catch (releaseException: Exception) {
+        val value = this.get()
+        return block(value)
+    } catch (e: Exception) {
+        released = true
+        try {
+            this.release()
+        } catch (releaseException: Exception) {
+        }
+        throw e
+    } finally {
+        if (!released) {
+            this.release()
+        }
     }
-    throw e
-  } finally {
-    if (!released) {
-      this.release()
-    }
-  }
 }
 
 /**
  * Use here duplicate code bc older versions of idea don't support it
  */
-inline fun <T: Closeable, R> T.useCompat(block: (T) -> R): R {
-  var released = false
-  try {
-    return block(this)
-  } catch (e: Exception) {
-    released = true
+inline fun <T : Closeable, R> T.useCompat(block: (T) -> R): R {
+    var released = false
     try {
-      this.close()
-    } catch (releaseException: Exception) {
+        return block(this)
+    } catch (e: Exception) {
+        released = true
+        try {
+            this.close()
+        } catch (releaseException: Exception) {
+        }
+        throw e
+    } finally {
+        if (!released) {
+            this.close()
+        }
     }
-    throw e
-  } finally {
-    if (!released) {
-      this.close()
-    }
-  }
 }
 
-class PsiGenericDirectoryNode(project: Project?, value: PsiDirectory,
-    viewSettings: ViewSettings?) : PsiDirectoryNode(project, value, viewSettings) {
-  override fun getChildrenImpl(): MutableCollection<AbstractTreeNode<*>> {
-    val project = project
-    if (project != null) {
-      val psiDirectory = value
-      if (psiDirectory != null) {
-        return processChildren(psiDirectory)
-      }
+class PsiGenericDirectoryNode(
+    project: Project?, value: PsiDirectory,
+    viewSettings: ViewSettings?
+) : PsiDirectoryNode(project, value, viewSettings) {
+    override fun getChildrenImpl(): MutableCollection<AbstractTreeNode<*>> {
+        val project = project
+        if (project != null) {
+            val psiDirectory = value
+            if (psiDirectory != null) {
+                return processChildren(psiDirectory)
+            }
+        }
+        return ContainerUtil.emptyList<AbstractTreeNode<*>>()
     }
-    return ContainerUtil.emptyList<AbstractTreeNode<*>>()
-  }
 }
 
 
