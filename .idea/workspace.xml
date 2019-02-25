@@ -24,9 +24,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f1867ec4-521c-4ea0-b120-819c806e94d2" name="Default" comment="Prepare for 0.11">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/github/b3er/idea/plugins/arc/browser/formats/gzip.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/github/b3er/idea/plugins/arc/browser/formats/gzip.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/github/b3er/idea/plugins/arc/browser/utils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/github/b3er/idea/plugins/arc/browser/utils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/META-INF/plugin.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -41,11 +39,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/resources/META-INF/plugin.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="20" column="36" selection-start-line="20" selection-start-column="36" selection-end-line="20" selection-end-column="36" />
+            <state relative-caret-position="374">
+              <caret line="22" selection-start-line="22" selection-end-line="22" />
             </state>
           </provider>
         </entry>
@@ -89,11 +87,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/github/b3er/idea/plugins/arc/browser/formats/gzip.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="164" column="19" selection-start-line="164" selection-start-column="19" selection-end-line="164" selection-end-column="19" />
+            <state relative-caret-position="441">
+              <caret line="177" lean-forward="true" selection-start-line="177" selection-end-line="177" />
               <folding>
                 <element signature="e#58#1127#0" expanded="true" />
               </folding>
@@ -198,12 +196,12 @@
         <option value="$PROJECT_DIR$/../intellij-community/platform/editor-ui-api/src/com/intellij/ide/projectView/TreeStructureProvider.java" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/resources/META-INF/plugin.xml" />
         <option value="$PROJECT_DIR$/src/com/github/b3er/idea/plugins/arc/browser/plugin.kt" />
         <option value="$PROJECT_DIR$/src/com/github/b3er/idea/plugins/arc/browser/base/BasePsiFileNode.kt" />
         <option value="$PROJECT_DIR$/src/com/github/b3er/idea/plugins/arc/browser/formats/zip.kt" />
         <option value="$PROJECT_DIR$/src/com/github/b3er/idea/plugins/arc/browser/utils.kt" />
         <option value="$PROJECT_DIR$/src/com/github/b3er/idea/plugins/arc/browser/formats/gzip.kt" />
+        <option value="$PROJECT_DIR$/resources/META-INF/plugin.xml" />
       </list>
     </option>
   </component>
@@ -261,12 +259,13 @@
             <path>
               <item name="idea-archive-browser" type="b2602c69:ProjectViewProjectNode" />
               <item name="idea-archive-browser" type="462c0819:PsiDirectoryNode" />
-              <item name=".idea" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="idea-archive-browser" type="b2602c69:ProjectViewProjectNode" />
               <item name="idea-archive-browser" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="META-INF" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="idea-archive-browser" type="b2602c69:ProjectViewProjectNode" />
@@ -569,7 +568,7 @@
       <module name="idea-archive-browser" />
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
       <option name="PROGRAM_PARAMETERS" value="" />
-      <alternative-path path="/Library/JetBrains/apps/IDEA-C/ch-1/163.15529.8/IntelliJ IDEA CE.app/Contents" alternative-path-enabled="true" />
+      <alternative-path path="/Library/JetBrains/apps/IDEA-C/ch-2/183.5429.30/IntelliJ IDEA CE.app/Contents" alternative-path-enabled="true" />
       <predefined_log_file enabled="true" id="idea.log" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -674,7 +673,7 @@
       <workItem from="1505640350261" duration="1126000" />
       <workItem from="1505641509144" duration="693000" />
       <workItem from="1523284914031" duration="793000" />
-      <workItem from="1551081605765" duration="5954000" />
+      <workItem from="1551081605765" duration="6297000" />
     </task>
     <task id="LOCAL-00001" summary="Added apk, aar extensions">
       <created>1487380591494</created>
@@ -757,7 +756,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="83019000" />
+    <option name="totallyTimeSpent" value="83362000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1105" extended-state="0" />
@@ -775,7 +774,7 @@
       <window_info id="Colour Chooser" order="9" weight="0.32960597" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32675222" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49307775" weight="0.17374136" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49307775" visible="true" weight="0.17374136" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49574015" weight="0.3721619" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -788,7 +787,7 @@
       <window_info anchor="bottom" id="TeamCity" order="12" />
       <window_info anchor="bottom" id="Run Dashboard" order="13" />
       <window_info anchor="bottom" id="SBT Console" order="14" />
-      <window_info active="true" anchor="bottom" id="Messages" order="15" sideWeight="0.4941427" visible="true" weight="0.3247779" />
+      <window_info anchor="bottom" id="Messages" order="15" sideWeight="0.4941427" weight="0.3247779" />
       <window_info anchor="bottom" id="IDEtalk Messages" order="16" />
       <window_info anchor="bottom" id="Application Servers" order="17" />
       <window_info anchor="bottom" id="FindBugs-IDEA" order="18" />
@@ -1204,13 +1203,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/META-INF/plugin.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="36" selection-start-line="20" selection-start-column="36" selection-end-line="20" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home/src.zip!/java/io/InputStream.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="469">
@@ -1241,11 +1233,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/github/b3er/idea/plugins/arc/browser/formats/gzip.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="164" column="19" selection-start-line="164" selection-start-column="19" selection-end-line="164" selection-end-column="19" />
+        <state relative-caret-position="441">
+          <caret line="177" lean-forward="true" selection-start-line="177" selection-end-line="177" />
           <folding>
             <element signature="e#58#1127#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/META-INF/plugin.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" selection-start-line="22" selection-end-line="22" />
         </state>
       </provider>
     </entry>
