@@ -28,7 +28,6 @@
 
   <idea-version since-build="145.0"/>
   <depends>com.intellij.modules.lang</depends>
-  <depends optional="true">com.intellij.modules.java</depends>
   <extensions defaultExtensionNs="com.intellij">
     <treeStructureProvider
         implementation="com.github.b3er.idea.plugins.arc.browser.ArchivePluginStructureProvider"/>
