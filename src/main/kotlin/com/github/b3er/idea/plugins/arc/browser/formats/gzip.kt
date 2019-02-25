@@ -39,7 +39,7 @@ object GZipFileType : FileType {
 
   override fun getIcon(): Icon? = AllIcons.FileTypes.Archive
 
-  override fun getCharset(file: VirtualFile, content: ByteArray) = null
+  override fun getCharset(file: VirtualFile, content: ByteArray): String? = null
 
   override fun getName() = "GZIP"
 
