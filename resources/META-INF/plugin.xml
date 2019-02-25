@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.github.b3er.idea.plugins.arc.browser</id>
   <name>Archive browser</name>
-  <version>0.12</version>
+  <version>0.13</version>
   <vendor email="b3er@who.ms" url="https://github.com/b3er/idea-archive-browser">Ilya Usanov
   </vendor>
 
@@ -11,6 +11,11 @@
 
   <change-notes><![CDATA[
     <ul>
+    <li>Version 0.13
+        <ul>
+          <li></li>
+        </ul>
+      </li>
       <li>Version 0.12
         <ul>
           <li>Fixed issue with project library files</li>
