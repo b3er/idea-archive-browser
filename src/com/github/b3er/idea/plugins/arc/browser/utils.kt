@@ -80,3 +80,4 @@ class PsiGenericDirectoryNode(project: Project?, value: PsiDirectory,
       return ContainerUtil.emptyList<AbstractTreeNode<*>>()
   }
 }
+

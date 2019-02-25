@@ -1,10 +1,9 @@
 package com.github.b3er.idea.plugins.arc.browser.formats
 
-import com.github.b3er.idea.plugins.arc.browser.processChildren
+import com.github.b3er.idea.plugins.arc.browser.base.BasePsiFileNode
 import com.github.b3er.idea.plugins.arc.browser.use
 import com.intellij.icons.AllIcons
 import com.intellij.ide.projectView.ViewSettings
-import com.intellij.ide.projectView.impl.nodes.PsiFileNode
 import com.intellij.ide.util.treeView.AbstractTreeNode
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.fileTypes.FileTypeRegistry
@@ -19,9 +18,6 @@ import com.intellij.openapi.vfs.impl.ArchiveHandler
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem
 import com.intellij.openapi.vfs.newvfs.VfsImplUtil
 import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiManager
-import com.intellij.util.Function
-import com.intellij.util.containers.ContainerUtil
 import com.intellij.util.io.FileAccessorCache
 import com.intellij.util.io.URLUtil
 import com.jcraft.jzlib.GZIPInputStream
@@ -30,17 +26,10 @@ import java.util.*
 import javax.swing.Icon
 
 class PsiGZipFileNode(project: Project?, value: PsiFile,
-    viewSettings: ViewSettings?) : PsiFileNode(project, value, viewSettings) {
+    viewSettings: ViewSettings?) : BasePsiFileNode(project, value, viewSettings) {
   override fun getChildrenImpl(): MutableCollection<AbstractTreeNode<*>> {
-    val project = project
     val gzipRoot = virtualFile?.let { GZipFileSystem.instance.getGZipRootForLocalFile(it) }
-    if (project != null && gzipRoot != null) {
-      val psiDirectory = PsiManager.getInstance(project).findDirectory(gzipRoot)
-      if (psiDirectory != null) {
-        return processChildren(psiDirectory)
-      }
-    }
-    return ContainerUtil.emptyList<AbstractTreeNode<*>>()
+    return getChilderForVirtualFile(gzipRoot)
   }
 }
 
@@ -77,10 +66,12 @@ abstract class GZipFileSystem : ArchiveFileSystem(), LocalFileProvider {
     return getRootByLocal(file)
   }
 
+  @Suppress("OverridingDeprecatedMember")
   override fun getLocalVirtualFileFor(entryVFile: VirtualFile?): VirtualFile? {
     return getVirtualFileForGZip(entryVFile)
   }
 
+  @Suppress("OverridingDeprecatedMember")
   override fun findLocalVirtualFileByPath(_path: String): VirtualFile? {
     var path = _path
     if (!path.contains(GZIP_SEPARATOR)) {
@@ -125,7 +116,7 @@ class GZipFileSystemImpl : GZipFileSystem() {
   }
 
   override fun getHandler(entryFile: VirtualFile): GZipHandler {
-    return VfsImplUtil.getHandler(this, entryFile)  { localPath ->
+    return VfsImplUtil.getHandler(this, entryFile) { localPath ->
       GZipHandler(localPath)
     }
   }
@@ -148,8 +139,10 @@ class GZipFileSystemImpl : GZipFileSystem() {
 }
 
 class GZipHandler(path: String) : ArchiveHandler(path) {
-  @Volatile private var myFileStamp: Long = DEFAULT_TIMESTAMP
-  @Volatile private var myFileLength: Long = DEFAULT_LENGTH
+  @Volatile
+  private var myFileStamp: Long = DEFAULT_TIMESTAMP
+  @Volatile
+  private var myFileLength: Long = DEFAULT_LENGTH
 
   companion object {
     private val accessorCache = object : FileAccessorCache<GZipHandler, GZipFile>(20, 10) {
