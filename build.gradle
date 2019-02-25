@@ -36,7 +36,7 @@ patchPluginXml {
         </html>
         ]]>"""
 
-    changeNotes """ <![CDATA[
+    changeNotes """<![CDATA[
         <html>
         <ul>
             <li>Version 0.13
