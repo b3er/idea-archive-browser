@@ -2,6 +2,7 @@ package com.github.b3er.idea.plugins.arc.browser.formats
 
 import com.github.b3er.idea.plugins.arc.browser.base.BasePsiFileNode
 import com.github.b3er.idea.plugins.arc.browser.use
+import com.github.b3er.idea.plugins.arc.browser.useCompat
 import com.intellij.icons.AllIcons
 import com.intellij.ide.projectView.ViewSettings
 import com.intellij.ide.util.treeView.AbstractTreeNode
@@ -162,8 +163,15 @@ class GZipHandler(path: String) : ArchiveHandler(path) {
   override fun contentsToByteArray(relativePath: String): ByteArray {
     val handle = getGZipFileHandle()
     return handle.use { gzip ->
-      gzip.inputStream().use {
-        FileUtil.loadBytes(it, gzip.length.toInt())
+      gzip.inputStream().useCompat {
+        // As we can't detect file length we try to guess it, or fall with zero
+        // TODO: read the stream until EOF here when no length
+        val arrayLength = when {
+          gzip.length > Int.MAX_VALUE -> Int.MAX_VALUE
+          gzip.length > 0 -> gzip.length.toInt()
+          else -> 0
+        }
+        FileUtil.loadBytes(it, arrayLength)
       }
     }
   }

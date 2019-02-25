@@ -15,6 +15,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileSystemItem
 import com.intellij.util.containers.ContainerUtil
 import com.intellij.util.io.FileAccessorCache
+import java.io.Closeable
 import java.util.*
 
 fun processPsiDirectoryChildren(children: Array<PsiElement>,
@@ -36,7 +37,8 @@ fun processPsiDirectoryChildren(children: Array<PsiElement>,
   }
 }
 
-@Suppress("NOTHING_TO_INLINE") inline fun BasePsiNode<*>.processChildren(
+@Suppress("NOTHING_TO_INLINE")
+inline fun BasePsiNode<*>.processChildren(
     dir: PsiDirectory): MutableCollection<AbstractTreeNode<*>> {
   val children = ArrayList<AbstractTreeNode<*>>()
   val project = dir.project
@@ -67,17 +69,40 @@ inline fun <T, R> FileAccessorCache.Handle<T>.use(block: (T) -> R): R {
   }
 }
 
-class PsiGenericDirectoryNode(project: Project?, value: PsiDirectory,
-    viewSettings: ViewSettings?) : PsiDirectoryNode(project, value, viewSettings) {
-   override fun getChildrenImpl(): MutableCollection<AbstractTreeNode<*>> {
-      val project = project
-      if (project != null) {
-        val psiDirectory = value
-        if (psiDirectory != null) {
-          return processChildren(psiDirectory)
-        }
-      }
-      return ContainerUtil.emptyList<AbstractTreeNode<*>>()
+/**
+ * Use here duplicate code bc older versions of idea don't support it
+ */
+inline fun <T: Closeable, R> T.useCompat(block: (T) -> R): R {
+  var released = false
+  try {
+    return block(this)
+  } catch (e: Exception) {
+    released = true
+    try {
+      this.close()
+    } catch (releaseException: Exception) {
+    }
+    throw e
+  } finally {
+    if (!released) {
+      this.close()
+    }
   }
 }
+
+class PsiGenericDirectoryNode(project: Project?, value: PsiDirectory,
+    viewSettings: ViewSettings?) : PsiDirectoryNode(project, value, viewSettings) {
+  override fun getChildrenImpl(): MutableCollection<AbstractTreeNode<*>> {
+    val project = project
+    if (project != null) {
+      val psiDirectory = value
+      if (psiDirectory != null) {
+        return processChildren(psiDirectory)
+      }
+    }
+    return ContainerUtil.emptyList<AbstractTreeNode<*>>()
+  }
+}
+
+
 
