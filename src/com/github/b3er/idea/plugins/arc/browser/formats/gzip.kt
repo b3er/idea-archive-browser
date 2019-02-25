@@ -63,13 +63,13 @@ object GZipFileType : FileType {
 
 abstract class GZipFileSystem : ArchiveFileSystem(), LocalFileProvider {
   companion object {
-    val GZIP_PROTOCOL = "gzip"
-    val GZIP_SEPARATOR = URLUtil.JAR_SEPARATOR
+    const val GZIP_PROTOCOL = "gzip"
+    const val GZIP_SEPARATOR = URLUtil.JAR_SEPARATOR
     val instance: GZipFileSystem
       get() = VirtualFileManager.getInstance().getFileSystem(GZIP_PROTOCOL) as GZipFileSystem
   }
 
-  fun getVirtualFileForGZip(entryFile: VirtualFile?): VirtualFile? {
+  private fun getVirtualFileForGZip(entryFile: VirtualFile?): VirtualFile? {
     return if (entryFile == null) null else getLocalByEntry(entryFile)
   }
 
@@ -125,9 +125,9 @@ class GZipFileSystemImpl : GZipFileSystem() {
   }
 
   override fun getHandler(entryFile: VirtualFile): GZipHandler {
-    return VfsImplUtil.getHandler(this, entryFile, Function<String, GZipHandler> { localPath ->
+    return VfsImplUtil.getHandler(this, entryFile)  { localPath ->
       GZipHandler(localPath)
-    })
+    }
   }
 
   override fun findFileByPath(path: String): VirtualFile? {
@@ -175,7 +175,7 @@ class GZipHandler(path: String) : ArchiveHandler(path) {
     }
   }
 
-  fun getGZipFileHandle(): FileAccessorCache.Handle<GZipFile> {
+  private fun getGZipFileHandle(): FileAccessorCache.Handle<GZipFile> {
     val handle = accessorCache[this]
     val attributes = file.canonicalFile.let {
       FileSystemUtil.getAttributes(it) ?: throw FileNotFoundException(it.toString())

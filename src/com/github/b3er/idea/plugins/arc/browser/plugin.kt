@@ -15,8 +15,7 @@ import java.util.*
 class ArchivePluginStructureProvider : TreeStructureProvider {
   override fun modify(parent: AbstractTreeNode<*>, children: MutableCollection<AbstractTreeNode<*>>,
       settings: ViewSettings?): MutableCollection<AbstractTreeNode<*>> {
-    return children.asSequence().map { convertArchiveNode(it) }.toCollection(
-        ArrayList<AbstractTreeNode<*>>())
+    return children.asSequence().map { convertArchiveNode(it) }.toCollection(ArrayList())
   }
 
   override fun getData(selected: MutableCollection<AbstractTreeNode<Any>>,

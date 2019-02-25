@@ -31,7 +31,6 @@ fun processPsiDirectoryChildren(children: Array<PsiElement>,
     if (child is PsiFile) {
       container.add(PsiFileNode(child.getProject(), child, viewSettings))
     } else if (child is PsiDirectory) {
-//      container.add(PsiDirectoryNode(child.getProject(),child,viewSettings))
       container.add(PsiGenericDirectoryNode(child.getProject(), child, viewSettings))
     }
   }
