@@ -29,7 +29,7 @@ import java.io.*
 import java.util.*
 import javax.swing.Icon
 
-class PsiGZipFileNode(project: Project?, value: PsiFile?,
+class PsiGZipFileNode(project: Project?, value: PsiFile,
     viewSettings: ViewSettings?) : PsiFileNode(project, value, viewSettings) {
   override fun getChildrenImpl(): MutableCollection<AbstractTreeNode<*>> {
     val project = project
@@ -112,7 +112,7 @@ class GZipFileSystemImpl : GZipFileSystem() {
   override fun extractRootPath(path: String): String {
     val gzipSeparatorIndex = path.indexOf(GZIP_SEPARATOR)
     assert(
-        gzipSeparatorIndex >= 0) { "Path passed to GZipFileSystem must have gzip separator '!/': " + path }
+        gzipSeparatorIndex >= 0) { "Path passed to GZipFileSystem must have gzip separator '!/': $path" }
     return path.substring(0, gzipSeparatorIndex + GZIP_SEPARATOR.length)
   }
 
@@ -160,7 +160,7 @@ class GZipHandler(path: String) : ArchiveHandler(path) {
         return GZipFile(key.file.canonicalFile)
       }
 
-      override fun disposeAccessor(fileAccessor: GZipFile?) {
+      override fun disposeAccessor(fileAccessor: GZipFile) {
 
       }
     }

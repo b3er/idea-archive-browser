@@ -31,6 +31,7 @@ fun processPsiDirectoryChildren(children: Array<PsiElement>,
     if (child is PsiFile) {
       container.add(PsiFileNode(child.getProject(), child, viewSettings))
     } else if (child is PsiDirectory) {
+//      container.add(PsiDirectoryNode(child.getProject(),child,viewSettings))
       container.add(PsiGenericDirectoryNode(child.getProject(), child, viewSettings))
     }
   }
@@ -67,16 +68,16 @@ inline fun <T, R> FileAccessorCache.Handle<T>.use(block: (T) -> R): R {
   }
 }
 
-class PsiGenericDirectoryNode(project: Project?, value: PsiDirectory?,
+class PsiGenericDirectoryNode(project: Project?, value: PsiDirectory,
     viewSettings: ViewSettings?) : PsiDirectoryNode(project, value, viewSettings) {
-  override fun getChildrenImpl(): MutableCollection<AbstractTreeNode<*>> {
-    val project = project
-    if (project != null) {
-      val psiDirectory = value
-      if (psiDirectory != null) {
-        return processChildren(psiDirectory)
+   override fun getChildrenImpl(): MutableCollection<AbstractTreeNode<*>> {
+      val project = project
+      if (project != null) {
+        val psiDirectory = value
+        if (psiDirectory != null) {
+          return processChildren(psiDirectory)
+        }
       }
-    }
-    return ContainerUtil.emptyList<AbstractTreeNode<*>>()
+      return ContainerUtil.emptyList<AbstractTreeNode<*>>()
   }
 }

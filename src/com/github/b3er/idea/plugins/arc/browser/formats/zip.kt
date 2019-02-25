@@ -10,7 +10,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.util.containers.ContainerUtil
 
-class PsiZipFileNode(project: Project?, value: PsiFile?, viewSettings: ViewSettings?) : PsiFileNode(
+class PsiZipFileNode(project: Project?, value: PsiFile, viewSettings: ViewSettings?) : PsiFileNode(
     project, value, viewSettings) {
   override fun getChildrenImpl(): MutableCollection<AbstractTreeNode<*>> {
     val project = project
