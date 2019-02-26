@@ -168,7 +168,7 @@ class GZipHandler(path: String) : ArchiveHandler(path) {
         val handle = getGZipFileHandle()
         return handle.use { gzip ->
             gzip.inputStream().useCompat {
-                // Assume that there s no length, so just gife the stream to idea
+                // Assume that there is no length, so just give the stream to idea
                 FileUtil.loadBytes(it)
             }
         }
