@@ -1,6 +1,7 @@
 <idea-plugin>
     <id>com.github.b3er.idea.plugins.arc.browser</id>
     <name>Archive browser</name>
+    <version>0.13</version>
     <vendor email="b3er@who.ms" url="https://github.com/b3er/idea-archive-browser">Ilya Usanov
     </vendor>
     <depends>com.intellij.modules.lang</depends>
@@ -12,6 +13,32 @@
         <virtualFileSystem key="gzip"
                            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.GZipFileSystemImpl"/>
     </extensions>
+    <description><![CDATA[
+        <html>
+        This plugin allows you to browse zip and gzip archives like folders in IDEA.
+        </html>
+        ]]></description>
+    <idea-version since-build="145.0"/>
+    <change-notes><![CDATA[<html>
+        <ul>
+            <li>Version 0.13
+                <ul>
+                    <li>Fixed memory issues with GZIP files</li>
+                </ul>
+            </li>
+            <li>Version 0.12
+                <ul>
+                    <li>Fixed issue with project library files</li>
+                    <li>Fixed issue with crash on particular GZIP files</li>
+                </ul>
+            </li>
+            <li>Version 0.11
+                <ul>
+                    <li>Expanded compatibility</li>
+                </ul>
+            </li>
+        </ul>
+        </html>]]></change-notes>
     <actions>
     </actions>
 </idea-plugin>
