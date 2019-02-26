@@ -168,14 +168,8 @@ class GZipHandler(path: String) : ArchiveHandler(path) {
         val handle = getGZipFileHandle()
         return handle.use { gzip ->
             gzip.inputStream().useCompat {
-                // As we can't detect file length we try to guess it, or fall with zero
-                // TODO: read the stream until EOF here when no length
-                val arrayLength = when {
-                    gzip.length > Int.MAX_VALUE -> Int.MAX_VALUE
-                    gzip.length > 0 -> gzip.length.toInt()
-                    else -> 0
-                }
-                FileUtil.loadBytes(it, arrayLength)
+                // Assume that there s no length, so just gife the stream to idea
+                FileUtil.loadBytes(it)
             }
         }
     }
