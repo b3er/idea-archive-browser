@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.github.b3er.idea.plugins.arc.browser</id>
     <name>Archive browser</name>
-    <version>0.13</version>
+    <version>0.14</version>
     <vendor email="b3er@who.ms" url="https://github.com/b3er/idea-archive-browser">Ilya Usanov
     </vendor>
     <depends>com.intellij.modules.lang</depends>
@@ -21,6 +21,11 @@
     <idea-version since-build="145.0"/>
     <change-notes><![CDATA[<html>
         <ul>
+            <li>Version 0.14
+                <ul>
+                    <li>Fixed memory issues with GZIP files</li>
+                </ul>
+            </li>
             <li>Version 0.13
                 <ul>
                     <li>Fixed memory issues with GZIP files</li>
