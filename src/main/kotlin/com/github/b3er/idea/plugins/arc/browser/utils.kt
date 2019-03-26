@@ -73,27 +73,6 @@ inline fun <T, R> FileAccessorCache.Handle<T>.use(block: (T) -> R): R {
     }
 }
 
-/**
- * Use here duplicate code bc older versions of idea don't support it
- */
-inline fun <T : Closeable, R> T.useCompat(block: (T) -> R): R {
-    var released = false
-    try {
-        return block(this)
-    } catch (e: Exception) {
-        released = true
-        try {
-            this.close()
-        } catch (releaseException: Exception) {
-        }
-        throw e
-    } finally {
-        if (!released) {
-            this.close()
-        }
-    }
-}
-
 class PsiGenericDirectoryNode(
     project: Project?, value: PsiDirectory,
     viewSettings: ViewSettings?

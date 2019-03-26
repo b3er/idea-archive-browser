@@ -1,8 +1,6 @@
 package com.github.b3er.idea.plugins.arc.browser
 
-import com.github.b3er.idea.plugins.arc.browser.formats.GZipFileType
-import com.github.b3er.idea.plugins.arc.browser.formats.PsiGZipFileNode
-import com.github.b3er.idea.plugins.arc.browser.formats.PsiZipFileNode
+import com.github.b3er.idea.plugins.arc.browser.formats.*
 import com.intellij.ide.highlighter.ArchiveFileType
 import com.intellij.ide.projectView.TreeStructureProvider
 import com.intellij.ide.projectView.ViewSettings
@@ -32,6 +30,7 @@ class ArchivePluginStructureProvider : TreeStructureProvider {
             return when (node.virtualFile?.fileType) {
                 is ArchiveFileType -> PsiZipFileNode(node.project, node.value, node.settings)
                 is GZipFileType -> PsiGZipFileNode(node.project, node.value, node.settings)
+                is RarFileType -> PsiRarFileNode(node.project, node.value, node.settings)
                 else -> node
             }
         }
@@ -41,6 +40,7 @@ class ArchivePluginStructureProvider : TreeStructureProvider {
 
 class ArchivePluginFileTypeFactory : FileTypeFactory() {
     override fun createFileTypes(consumer: FileTypeConsumer) {
+        consumer.consume(RarFileType,"rar;")
         consumer.consume(ArchiveFileType.INSTANCE, "epub;htmlz;zip;apk;aar;")
         consumer.consume(GZipFileType, "gz;")
     }

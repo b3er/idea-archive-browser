@@ -1,28 +1,26 @@
 package com.github.b3er.idea.plugins.arc.browser.formats
 
+import com.github.b3er.idea.plugins.arc.browser.base.BaseArchiveFileSystem
+import com.github.b3er.idea.plugins.arc.browser.base.BaseArchiveHandler
 import com.github.b3er.idea.plugins.arc.browser.base.BasePsiFileNode
 import com.github.b3er.idea.plugins.arc.browser.use
-import com.github.b3er.idea.plugins.arc.browser.useCompat
 import com.intellij.icons.AllIcons
 import com.intellij.ide.projectView.ViewSettings
 import com.intellij.ide.util.treeView.AbstractTreeNode
 import com.intellij.openapi.fileTypes.FileType
-import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.io.FileSystemUtil
 import com.intellij.openapi.util.io.FileUtil
-import com.intellij.openapi.util.text.StringUtil
-import com.intellij.openapi.vfs.LocalFileProvider
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
-import com.intellij.openapi.vfs.impl.ArchiveHandler
-import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem
 import com.intellij.openapi.vfs.newvfs.VfsImplUtil
 import com.intellij.psi.PsiFile
 import com.intellij.util.io.FileAccessorCache
 import com.intellij.util.io.URLUtil
 import com.jcraft.jzlib.GZIPInputStream
-import java.io.*
+import java.io.EOFException
+import java.io.File
+import java.io.InputStream
+import java.io.RandomAccessFile
 import java.util.*
 import javax.swing.Icon
 
@@ -31,7 +29,7 @@ class PsiGZipFileNode(
     viewSettings: ViewSettings?
 ) : BasePsiFileNode(project, value, viewSettings) {
     override fun getChildrenImpl(): MutableCollection<AbstractTreeNode<*>> {
-        val gzipRoot = virtualFile?.let { GZipFileSystem.instance.getGZipRootForLocalFile(it) }
+        val gzipRoot = virtualFile?.let { GZipFileSystem.instance.getArchiveRootForLocalFile(it) }
         return getChildrenForVirtualFile(gzipRoot)
     }
 }
@@ -53,153 +51,50 @@ object GZipFileType : FileType {
 
 }
 
-abstract class GZipFileSystem : ArchiveFileSystem(), LocalFileProvider {
+abstract class GZipFileSystem : BaseArchiveFileSystem(GZipFileType, GZIP_PROTOCOL, GZIP_SEPARATOR) {
     companion object {
         const val GZIP_PROTOCOL = "gzip"
         const val GZIP_SEPARATOR = URLUtil.JAR_SEPARATOR
         val instance: GZipFileSystem
             get() = VirtualFileManager.getInstance().getFileSystem(GZIP_PROTOCOL) as GZipFileSystem
     }
-
-    private fun getVirtualFileForGZip(entryFile: VirtualFile?): VirtualFile? {
-        return if (entryFile == null) null else getLocalByEntry(entryFile)
-    }
-
-    fun getGZipRootForLocalFile(file: VirtualFile): VirtualFile? {
-        return getRootByLocal(file)
-    }
-
-    @Suppress("OverridingDeprecatedMember")
-    override fun getLocalVirtualFileFor(entryVFile: VirtualFile?): VirtualFile? {
-        return getVirtualFileForGZip(entryVFile)
-    }
-
-    @Suppress("OverridingDeprecatedMember")
-    override fun findLocalVirtualFileByPath(_path: String): VirtualFile? {
-        var path = _path
-        if (!path.contains(GZIP_SEPARATOR)) {
-            path += GZIP_SEPARATOR
-        }
-        return findFileByPath(path)
-    }
-
-    override fun isCorrectFileType(local: VirtualFile): Boolean {
-        return FileTypeRegistry.getInstance().getFileTypeByFileName(local.name) == GZipFileType
-    }
 }
 
 class GZipFileSystemImpl : GZipFileSystem() {
-    override fun getProtocol() = GZIP_PROTOCOL
-
-    override fun extractPresentableUrl(path: String) = super.extractPresentableUrl(
-        StringUtil.trimEnd(path, GZIP_SEPARATOR)
-    )
-
-    override fun normalize(path: String): String? {
-        val gzipSeparatorIndex = path.indexOf(GZIP_SEPARATOR)
-        if (gzipSeparatorIndex > 0) {
-            val root = path.substring(0, gzipSeparatorIndex)
-            return FileUtil.normalize(root) + path.substring(gzipSeparatorIndex)
-        }
-        return super.normalize(path)
-    }
-
-    override fun extractRootPath(path: String): String {
-        val gzipSeparatorIndex = path.indexOf(GZIP_SEPARATOR)
-        assert(
-            gzipSeparatorIndex >= 0
-        ) { "Path passed to GZipFileSystem must have gzip separator '!/': $path" }
-        return path.substring(0, gzipSeparatorIndex + GZIP_SEPARATOR.length)
-    }
-
-    override fun extractLocalPath(rootPath: String): String {
-        return StringUtil.trimEnd(rootPath, GZIP_SEPARATOR)
-    }
-
-    override fun composeRootPath(localPath: String): String {
-        return localPath + GZIP_SEPARATOR
-    }
-
     override fun getHandler(entryFile: VirtualFile): GZipHandler {
         return VfsImplUtil.getHandler(this, entryFile) { localPath ->
             GZipHandler(localPath)
         }
     }
-
-    override fun findFileByPath(path: String): VirtualFile? {
-        return VfsImplUtil.findFileByPath(this, path)
-    }
-
-    override fun findFileByPathIfCached(path: String): VirtualFile? {
-        return VfsImplUtil.findFileByPathIfCached(this, path)
-    }
-
-    override fun refreshAndFindFileByPath(path: String): VirtualFile? {
-        return VfsImplUtil.refreshAndFindFileByPath(this, path)
-    }
-
-    override fun refresh(asynchronous: Boolean) {
-        VfsImplUtil.refresh(this, asynchronous)
-    }
 }
 
-class GZipHandler(path: String) : ArchiveHandler(path) {
-    @Volatile
-    private var myFileStamp: Long = DEFAULT_TIMESTAMP
-    @Volatile
-    private var myFileLength: Long = DEFAULT_LENGTH
+class GZipHandler(path: String) : BaseArchiveHandler<GZipFile>(path) {
+    override val accessorCache: FileAccessorCache<BaseArchiveHandler<GZipFile>, GZipFile> = CACHE
 
     companion object {
-        private val accessorCache = object : FileAccessorCache<GZipHandler, GZipFile>(20, 10) {
-            override fun createAccessor(key: GZipHandler): GZipFile {
-                val attributes = FileSystemUtil.getAttributes(key.file.canonicalFile)
-                key.myFileStamp = attributes?.lastModified ?: ArchiveHandler.DEFAULT_TIMESTAMP
-                key.myFileLength = attributes?.length ?: ArchiveHandler.DEFAULT_LENGTH
-                return GZipFile(key.file.canonicalFile)
-            }
-
-            override fun disposeAccessor(fileAccessor: GZipFile) {
-
-            }
-        }
+        private val CACHE = createCache<GZipFile>(
+            onCreate = { GZipFile(it.file.canonicalFile) }
+        )
     }
 
     override fun contentsToByteArray(relativePath: String): ByteArray {
-        val handle = getGZipFileHandle()
+        val handle = getFileHandle()
         return handle.use { gzip ->
-            gzip.inputStream().useCompat {
+            gzip.inputStream().use {
                 // Assume that there is no length, so just give the stream to idea
                 FileUtil.loadBytes(it)
             }
         }
     }
 
-    private fun getGZipFileHandle(): FileAccessorCache.Handle<GZipFile> {
-        val handle = accessorCache[this]
-        val attributes = file.canonicalFile.let {
-            FileSystemUtil.getAttributes(it) ?: throw FileNotFoundException(it.toString())
-        }
-        if (attributes.lastModified == myFileStamp && attributes.length == myFileLength) {
-            return handle
-        }
-        accessorCache.remove(this)
-        handle.release()
-        return accessorCache[this]
-    }
-
     override fun createEntriesMap(): MutableMap<String, EntryInfo> {
-        return getGZipFileHandle().use { gzip ->
+        return getFileHandle().use { gzip ->
             val map = HashMap<String, EntryInfo>()
             val root = EntryInfo("", true, DEFAULT_LENGTH, DEFAULT_TIMESTAMP, null)
             map[""] = root
             map[gzip.name] = EntryInfo(gzip.name, false, gzip.length, gzip.timestamp, root)
             map
         }
-    }
-
-    override fun dispose() {
-        super.dispose()
-        accessorCache.remove(this)
     }
 }
 
