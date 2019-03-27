@@ -15,7 +15,8 @@
     </extensions>
     <description><![CDATA[
         <html>
-        This plugin allows you to browse zip and gzip archives like folders in IDEA.
+        This plugin allows you to browse most archives like folders in IDEA.
+        Supported archives (most of 7-zip supports): 7z, XZ, BZIP2, GZIP, TAR, ZIP, WIM, AR, ARJ, CAB, CHM, CPIO, CramFS, DMG, EXT, FAT, GPT, HFS, IHEX, ISO, LZH, LZMA, MBR, MSI, NSIS, NTFS, QCOW2, RAR, RPM, SquashFS, UDF, UEFI, VDI, VHD, VMDK, WIM, XAR and Z
         </html>
         ]]></description>
     <idea-version since-build="145.0"/>
@@ -24,7 +25,7 @@
         <ul>
             <li>Version 0.14
                 <ul>
-                    <li></li>
+                    <li>Added support for 7-zip utility compatible archives</li>
                 </ul>
             </li>
             <li>Version 0.13
