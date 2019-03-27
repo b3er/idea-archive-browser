@@ -1,6 +1,8 @@
 package com.github.b3er.idea.plugins.arc.browser
 
-import com.github.b3er.idea.plugins.arc.browser.formats.*
+import com.github.b3er.idea.plugins.arc.browser.base.sevenzip.SevenZipPsiFileNode
+import com.github.b3er.idea.plugins.arc.browser.formats.PsiZipFileNode
+import com.github.b3er.idea.plugins.arc.browser.formats.SevenZipArchiveFileType
 import com.intellij.ide.highlighter.ArchiveFileType
 import com.intellij.ide.projectView.TreeStructureProvider
 import com.intellij.ide.projectView.ViewSettings
@@ -29,8 +31,7 @@ class ArchivePluginStructureProvider : TreeStructureProvider {
         if (node is PsiFileNode) {
             return when (node.virtualFile?.fileType) {
                 is ArchiveFileType -> PsiZipFileNode(node.project, node.value, node.settings)
-                is GZipFileType -> PsiGZipFileNode(node.project, node.value, node.settings)
-                is RarFileType -> PsiRarFileNode(node.project, node.value, node.settings)
+                is SevenZipArchiveFileType -> SevenZipPsiFileNode(node.project, node.value, node.settings)
                 else -> node
             }
         }
@@ -40,9 +41,11 @@ class ArchivePluginStructureProvider : TreeStructureProvider {
 
 class ArchivePluginFileTypeFactory : FileTypeFactory() {
     override fun createFileTypes(consumer: FileTypeConsumer) {
-        consumer.consume(RarFileType,"rar;")
+        consumer.consume(
+            SevenZipArchiveFileType,
+            "gz;rar;tar;lzma;cpio;bz2;7z;xz;arj;iso;lzh;msi;rpm;squashfs;sfs;xar;z;vmdk;wim;vhd;vdi;uefi;udf;hfs;dmg;ext;fat;ntfs;"
+        )
         consumer.consume(ArchiveFileType.INSTANCE, "epub;htmlz;zip;apk;aar;")
-        consumer.consume(GZipFileType, "gz;")
     }
 }
 

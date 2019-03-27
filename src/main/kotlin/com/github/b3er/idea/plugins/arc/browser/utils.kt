@@ -5,6 +5,7 @@ import com.intellij.ide.projectView.impl.nodes.BasePsiNode
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode
 import com.intellij.ide.projectView.impl.nodes.PsiFileNode
 import com.intellij.ide.util.treeView.AbstractTreeNode
+import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleFileIndex
 import com.intellij.openapi.roots.ModuleRootManager
@@ -15,7 +16,6 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileSystemItem
 import com.intellij.util.containers.ContainerUtil
 import com.intellij.util.io.FileAccessorCache
-import java.io.Closeable
 import java.util.*
 
 fun processPsiDirectoryChildren(
@@ -54,7 +54,7 @@ inline fun BasePsiNode<*>.processChildren(
     return children
 }
 
-inline fun <T, R> FileAccessorCache.Handle<T>.use(block: (T) -> R): R {
+inline fun <T, R> FileAccessorCache.Handle<T>.getAndUse(block: (T) -> R): R {
     var released = false
     try {
         val value = this.get()
@@ -89,5 +89,9 @@ class PsiGenericDirectoryNode(
     }
 }
 
+object AppInfoUtil {
+    val applicationInfo = ApplicationInfo.getInstance()
+    val baselineVersion = applicationInfo.build.baselineVersion
+}
 
 

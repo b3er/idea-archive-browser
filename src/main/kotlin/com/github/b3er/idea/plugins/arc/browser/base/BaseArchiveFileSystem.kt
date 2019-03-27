@@ -2,16 +2,12 @@ package com.github.b3er.idea.plugins.arc.browser.base
 
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.fileTypes.FileTypeRegistry
-import com.intellij.openapi.util.io.FileSystemUtil
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.LocalFileProvider
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem
 import com.intellij.openapi.vfs.newvfs.VfsImplUtil
-import com.intellij.util.io.FileAccessorCache
-import java.io.File
-import java.io.FileNotFoundException
 
 abstract class BaseArchiveFileSystem(
     protected val fileType: FileType,
@@ -89,23 +85,5 @@ abstract class BaseArchiveFileSystem(
 
     override fun refresh(asynchronous: Boolean) {
         VfsImplUtil.refresh(this, asynchronous)
-    }
-
-    protected fun <T> getFileHandle(
-        file: File,
-        cache: FileAccessorCache<Any, T>,
-        timeStamp: Long,
-        length: Long
-    ): FileAccessorCache.Handle<T> {
-        val handle = cache[this]
-        val attributes = file.canonicalFile.let {
-            FileSystemUtil.getAttributes(it) ?: throw FileNotFoundException(it.toString())
-        }
-        if (attributes.lastModified == timeStamp && attributes.length == length) {
-            return handle
-        }
-        cache.remove(this)
-        handle.release()
-        return cache[this]
     }
 }

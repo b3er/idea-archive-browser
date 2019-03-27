@@ -10,10 +10,8 @@
                 implementation="com.github.b3er.idea.plugins.arc.browser.ArchivePluginStructureProvider"/>
         <fileTypeFactory
                 implementation="com.github.b3er.idea.plugins.arc.browser.ArchivePluginFileTypeFactory"/>
-        <virtualFileSystem key="gzip"
-                           implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.GZipFileSystemImpl"/>
-        <virtualFileSystem key="rar"
-                           implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.RarFileSystemImpl"/>
+        <virtualFileSystem key="7zip"
+                           implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.SevenZipArchiveFileSystemImpl"/>
     </extensions>
     <description><![CDATA[
         <html>
@@ -21,7 +19,8 @@
         </html>
         ]]></description>
     <idea-version since-build="145.0"/>
-    <change-notes><![CDATA[<html>
+    <change-notes><![CDATA[
+        <html>
         <ul>
             <li>Version 0.14
                 <ul>
@@ -45,7 +44,8 @@
                 </ul>
             </li>
         </ul>
-        </html>]]></change-notes>
+        </html>
+        ]]></change-notes>
     <actions>
     </actions>
 </idea-plugin>
