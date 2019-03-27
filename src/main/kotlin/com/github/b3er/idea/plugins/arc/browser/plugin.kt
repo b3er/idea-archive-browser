@@ -43,7 +43,7 @@ class ArchivePluginFileTypeFactory : FileTypeFactory() {
     override fun createFileTypes(consumer: FileTypeConsumer) {
         consumer.consume(
             SevenZipArchiveFileType,
-            "gz;rar;deb;tar;lzma;cpio;bz2;7z;xz;arj;iso;lzh;msi;rpm;squashfs;sfs;xar;z;vmdk;wim;vhd;vdi;uefi;udf;hfs;dmg;ext;fat;ntfs;chm;"
+            "gz;rar;deb;tar;lzma;cpio;bz2;7z;xz;arj;iso;lzh;msi;rpm;squashfs;sfs;xar;z;vmdk;wim;vhd;vdi;uefi;udf;hfs;dmg;ext;fat;ntfs;chm;cab;"
         )
         consumer.consume(ArchiveFileType.INSTANCE, "epub;htmlz;zip;apk;aar;")
     }
