@@ -17,12 +17,6 @@ class SevenZipArchiveFileSystemImpl : SevenZipArchiveFileSystem(SevenZipArchiveF
         val instance: SevenZipArchiveFileSystem
             get() = VirtualFileManager.getInstance().getFileSystem(SZ_PROTOCOL) as SevenZipArchiveFileSystem
     }
-
-    override fun getHandler(entryFile: VirtualFile): SevenZipArchiveHandler {
-        return VfsImplUtil.getHandler(this, entryFile) { localPath ->
-            SevenZipArchiveHandler(localPath)
-        }
-    }
 }
 
 object SevenZipArchiveFileType : FileType {
