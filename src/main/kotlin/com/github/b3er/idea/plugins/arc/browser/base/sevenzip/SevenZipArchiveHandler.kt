@@ -4,9 +4,7 @@ import com.Ostermiller.util.CircularByteBuffer
 import com.github.b3er.idea.plugins.arc.browser.AppInfoUtil
 import com.github.b3er.idea.plugins.arc.browser.base.BaseArchiveHandler
 import com.github.b3er.idea.plugins.arc.browser.getAndUse
-import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.util.io.FileTooBigException
-import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.util.io.FileAccessorCache
 import com.intellij.util.text.ByteArrayCharSequence
@@ -33,7 +31,6 @@ open class SevenZipArchiveHandler(path: String) :
         }
     }
 
-    private val appInfo = ApplicationInfo.getInstance()
     override val accessorCache: FileAccessorCache<BaseArchiveHandler<SevenZipArchiveHolder>, SevenZipArchiveHolder> =
         CACHE
 
@@ -174,8 +171,12 @@ open class SevenZipArchiveHandler(path: String) :
             if (FileUtilRt.isTooLarge(item.size ?: DEFAULT_LENGTH)) {
                 throw FileTooBigException("$file!/$relativePath")
             } else {
-                getInputStreamForItem(item).use {
-                    FileUtil.loadBytes(it)
+                ByteArrayOutputStream(item.size.toInt()).use { stream ->
+                    item.extractSlow {
+                        stream.write(it)
+                        it.size
+                    }
+                    stream.toByteArray()
                 }
             }
         }

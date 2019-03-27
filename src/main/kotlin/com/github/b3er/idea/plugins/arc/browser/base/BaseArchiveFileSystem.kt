@@ -47,20 +47,20 @@ abstract class BaseArchiveFileSystem(
     )
 
     override fun normalize(path: String): String? {
-        val gzipSeparatorIndex = path.indexOf(fsSeparator)
-        if (gzipSeparatorIndex > 0) {
-            val root = path.substring(0, gzipSeparatorIndex)
-            return FileUtil.normalize(root) + path.substring(gzipSeparatorIndex)
+        val separatorIndex = path.indexOf(fsSeparator)
+        if (separatorIndex > 0) {
+            val root = path.substring(0, separatorIndex)
+            return FileUtil.normalize(root) + path.substring(separatorIndex)
         }
         return super.normalize(path)
     }
 
     override fun extractRootPath(path: String): String {
-        val gzipSeparatorIndex = path.indexOf(fsSeparator)
+        val separatorIndex = path.indexOf(fsSeparator)
         assert(
-            gzipSeparatorIndex >= 0
+            separatorIndex >= 0
         ) { "Path passed to ${this.javaClass.simpleName} must have separator '!/': $path" }
-        return path.substring(0, gzipSeparatorIndex + fsSeparator.length)
+        return path.substring(0, separatorIndex + fsSeparator.length)
     }
 
     override fun extractLocalPath(rootPath: String): String {
