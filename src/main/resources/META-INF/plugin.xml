@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.github.b3er.idea.plugins.arc.browser</id>
     <name>Archive browser</name>
-    <version>0.14</version>
+    <version>0.15</version>
     <vendor email="b3er@who.ms" url="https://github.com/b3er/idea-archive-browser">Ilya Usanov
     </vendor>
     <depends>com.intellij.modules.lang</depends>
@@ -23,6 +23,11 @@
     <change-notes><![CDATA[
         <html>
         <ul>
+            <li>Version 0.15
+                <ul>
+                    <li></li>
+                </ul>
+            </li>
             <li>Version 0.14
                 <ul>
                     <li>Added support for 7-zip utility compatible archives</li>
