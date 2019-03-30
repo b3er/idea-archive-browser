@@ -61,7 +61,7 @@ class ArchivePluginStructureProvider : TreeStructureProvider {
 
 class ArchivePluginFileTypeFactory : FileTypeFactory() {
     companion object {
-        val COMMON_ZIP_EXTENSIONS = sortedSetOf("jar", "war")
+        val COMMON_ZIP_EXTENSIONS = sortedSetOf("jar", "war", "ear")
         val ZIP_EXTENSIONS = sortedSetOf("epub", "htmlz", "zip", "apk", "aar")
         val SEVEN_ZIP_EXTENSIONS = sortedSetOf(
             "gz",
