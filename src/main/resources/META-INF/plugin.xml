@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.github.b3er.idea.plugins.arc.browser</id>
     <name>Archive browser</name>
-    <version>0.18</version>
+    <version>0.19</version>
     <vendor email="b3er@who.ms" url="https://github.com/b3er/idea-archive-browser">Ilya Usanov
     </vendor>
     <depends>com.intellij.modules.lang</depends>
@@ -25,7 +25,7 @@
     <change-notes><![CDATA[
         <html>
         <ul>
-            <li>Version 0.18
+            <li>Version 0.19
                 <ul>
                     <li>Nested archives support, fixed issue with .tgz and .gz extension</li>
                 </ul>
