@@ -5,4 +5,4 @@ Supported archives (most of 7-zip supports): 7z, XZ, BZIP2, GZIP, TAR, ZIP, WIM,
 
 Nested archives is also supported
 ### Install
-Install from plugins repository in IDE, or download jar file from releases.
+Install from [plugins repository in IDE](https://plugins.jetbrains.com/plugin/9491-archive-browser), or download jar file from releases.
