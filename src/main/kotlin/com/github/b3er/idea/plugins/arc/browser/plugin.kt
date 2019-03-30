@@ -37,6 +37,7 @@ class ArchivePluginStructureProvider : TreeStructureProvider {
         if (node is PsiFileNode) {
             val virtualFile = node.virtualFile
             if (virtualFile != null) {
+                try {
                     var psiFile = node.value
                     if (FSUtils.isArchiveFile(virtualFile.path)
                         && FSUtils.isNestedFile(virtualFile.path)
@@ -53,6 +54,10 @@ class ArchivePluginStructureProvider : TreeStructureProvider {
                         is GzipFileType -> GZipFileNode(node.project, psiFile, node.settings)
                         else -> node
                     }
+                }catch (t: Throwable) {
+                    // return the original node in case of any error
+                    return node
+                }
             }
         }
         return node
