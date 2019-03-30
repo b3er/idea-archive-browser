@@ -25,6 +25,11 @@
     <change-notes><![CDATA[
         <html>
         <ul>
+            <li>Version 0.17
+                <ul>
+                    <li>Nested archives support, fixed issue with .tgz and .gz extension</li>
+                </ul>
+            </li>
             <li>Version 0.16
                 <ul>
                     <li>Nested archives support, fixed issue with .tgz extension</li>

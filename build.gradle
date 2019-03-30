@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.github.b3er'
-version '0.16'
+version '0.17'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
