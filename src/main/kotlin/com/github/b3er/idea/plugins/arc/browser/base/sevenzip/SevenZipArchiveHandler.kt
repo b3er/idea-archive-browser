@@ -1,19 +1,21 @@
 package com.github.b3er.idea.plugins.arc.browser.base.sevenzip
 
 import com.Ostermiller.util.CircularByteBuffer
-import com.github.b3er.idea.plugins.arc.browser.AppInfoUtil
+import com.github.b3er.idea.plugins.arc.browser.FSUtils
 import com.github.b3er.idea.plugins.arc.browser.base.BaseArchiveHandler
 import com.github.b3er.idea.plugins.arc.browser.getAndUse
 import com.intellij.openapi.util.io.FileTooBigException
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.util.io.FileAccessorCache
-import com.intellij.util.text.ByteArrayCharSequence
+import net.sf.sevenzipjbinding.ExtractOperationResult
 import net.sf.sevenzipjbinding.IInArchive
+import net.sf.sevenzipjbinding.ISequentialOutStream
 import net.sf.sevenzipjbinding.SevenZip
 import net.sf.sevenzipjbinding.impl.RandomAccessFileInStream
 import net.sf.sevenzipjbinding.simple.ISimpleInArchive
 import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
 import java.io.*
+import java.util.concurrent.Executors
 
 
 open class SevenZipArchiveHandler(path: String) :
@@ -41,6 +43,7 @@ open class SevenZipArchiveHandler(path: String) :
             },
             onDispose = SevenZipArchiveHolder::close
         )
+        val IO_EXECUTOR = Executors.newCachedThreadPool()
     }
 
     override fun createEntriesMap(): MutableMap<String, EntryInfo> {
@@ -84,13 +87,7 @@ open class SevenZipArchiveHandler(path: String) :
         if ("." == path.second) {
             return parentInfo
         }
-        val shortName = if (AppInfoUtil.baselineVersion >= 183) {
-            @Suppress("MissingRecentApi")
-            ByteArrayCharSequence.convertToBytesIfPossible(path.second)
-        } else {
-            @Suppress("DEPRECATION")
-            ByteArrayCharSequence.convertToBytesIfAsciiString(path.second)
-        }
+        val shortName = convertNameToBytes(path.second)
         info = EntryInfo(
             shortName,
             item.isFolder,
@@ -115,9 +112,8 @@ open class SevenZipArchiveHandler(path: String) :
             }
             val path = splitPath(entryName)
             val parentInfo = getOrCreate(path.first, map, archive)
-            @Suppress("DEPRECATION")
             info = EntryInfo(
-                ByteArrayCharSequence.convertToBytesIfAsciiString(path.second), true, DEFAULT_LENGTH,
+                convertNameToBytes(path.second), true, DEFAULT_LENGTH,
                 DEFAULT_TIMESTAMP, parentInfo
             )
             map[entryName] = info
@@ -148,14 +144,7 @@ open class SevenZipArchiveHandler(path: String) :
     }
 
     private fun getInputStreamForItem(item: ISimpleInArchiveItem): InputStream {
-        val buffer = CircularByteBuffer(CircularByteBuffer.INFINITE_SIZE, true)
-        buffer.outputStream.use { out ->
-            item.extractSlow {
-                out.write(it)
-                it.size
-            }
-        }
-        return buffer.inputStream
+        return SevenZipInputStream(item)
     }
 
     override fun getInputStream(relativePath: String): InputStream {
@@ -171,7 +160,7 @@ open class SevenZipArchiveHandler(path: String) :
             if (FileUtilRt.isTooLarge(item.size ?: DEFAULT_LENGTH)) {
                 throw FileTooBigException("$file!/$relativePath")
             } else {
-                ByteArrayOutputStream(item.size.toInt()).use { stream ->
+                ByteArrayOutputStream(item.size?.toInt()?: DEFAULT_BUFFER_SIZE).use { stream ->
                     item.extractSlow {
                         stream.write(it)
                         it.size
@@ -183,5 +172,46 @@ open class SevenZipArchiveHandler(path: String) :
     }
 
     private val ISimpleInArchiveItem.ideaPath
-        get() = path?.replace('\\', '/') ?: ""
+        get() = FSUtils.convertPathToIdea(path)
+
+
+    class SevenZipInputStream(private val item: ISimpleInArchiveItem) : InputStream() {
+        private var buffer: CircularByteBuffer? = null
+        private val stream by lazy {
+            val b = CircularByteBuffer(1 * 1024 * 1024, true)
+            buffer = b
+            IO_EXECUTOR.submit {
+                b.outputStream.use { out ->
+                    item.extractSlow {
+                        out.write(it)
+                        it.size
+                    }
+                }
+            }
+            b.inputStream
+        }
+
+        override fun read(): Int = stream.read()
+
+        override fun read(b: ByteArray?, off: Int, len: Int): Int = stream.read(b, off, len)
+
+        override fun available(): Int = stream.available()
+
+        override fun reset() = stream.reset()
+
+        override fun skip(n: Long): Long = stream.skip(n)
+
+        override fun mark(readlimit: Int) = stream.mark(readlimit)
+
+        override fun markSupported(): Boolean = stream.markSupported()
+
+        override fun close() {
+            if (buffer != null) {
+                stream.close()
+            }
+        }
+
+        fun directRead(stream: ISequentialOutStream): ExtractOperationResult = item.extractSlow(stream)
+        fun directRead(stream: (ByteArray) -> Int): ExtractOperationResult = item.extractSlow(stream)
+    }
 }

@@ -1,43 +1,39 @@
 package com.github.b3er.idea.plugins.arc.browser.base.sevenzip
 
-import com.github.b3er.idea.plugins.arc.browser.AppInfoUtil
+import com.github.b3er.idea.plugins.arc.browser.FSUtils
 import com.github.b3er.idea.plugins.arc.browser.base.BaseArchiveFileSystem
+import com.github.b3er.idea.plugins.arc.browser.formats.SevenZipArchiveFileType
 import com.intellij.openapi.fileTypes.FileType
+import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.impl.ArchiveHandler
 import com.intellij.openapi.vfs.newvfs.VfsImplUtil
 import net.sf.sevenzipjbinding.SevenZip
-import java.io.File
 
 abstract class SevenZipArchiveFileSystem(
     fileType: FileType,
     fsProtocol: String,
     fsSeparator: String
-) : BaseArchiveFileSystem(fileType, fsProtocol, fsSeparator) {
+) : BaseArchiveFileSystem(fsProtocol, fsSeparator) {
     companion object {
         init {
             if (!SevenZip.isInitializedSuccessfully()) {
-                val tmpDir = System.getProperty("java.io.tmpdir")
-                    ?: throw IllegalArgumentException("can't determine tmp directory. Use may use -Djava.io.tmpdir=<path to tmp dir> parameter for jvm to fix this.")
-                // SevenZip can't extract platform libs if they already used in other product, so we need to split dirs
-                val productTempDir =
-                    File(File(tmpDir, "archive-browser-idea"), AppInfoUtil.applicationInfo.build.productCode)
-                val buildNumber = AppInfoUtil.applicationInfo.build.asStringWithoutProductCode()
-                // Cleanup old builds
-                if (productTempDir.exists()) {
-                    productTempDir.listFiles().filter { it.name != buildNumber }.forEach { it.deleteRecursively() }
+                val tmpDir = FSUtils.getPluginTempFolder()
+                if (!tmpDir.exists()) {
+                    tmpDir.mkdirs()
                 }
-                val targetDir = File(productTempDir, buildNumber)
-                if (!targetDir.exists()) {
-                    targetDir.mkdirs()
-                }
-                SevenZip.initSevenZipFromPlatformJAR(targetDir)
+                SevenZip.initSevenZipFromPlatformJAR(tmpDir)
             }
         }
     }
 
-    override fun getHandler(entryFile: VirtualFile): SevenZipArchiveHandler {
+    override fun getHandler(entryFile: VirtualFile): ArchiveHandler {
         return VfsImplUtil.getHandler(this, entryFile) { localPath ->
             SevenZipArchiveHandler(localPath)
         }
+    }
+
+    override fun isCorrectFileType(local: VirtualFile): Boolean {
+        return FileTypeRegistry.getInstance().getFileTypeByFileName(local.name) is SevenZipArchiveFileType
     }
 }

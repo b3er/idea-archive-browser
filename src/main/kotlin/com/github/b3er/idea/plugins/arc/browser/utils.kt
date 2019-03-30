@@ -1,21 +1,30 @@
 package com.github.b3er.idea.plugins.arc.browser
 
+import com.github.b3er.idea.plugins.arc.browser.base.sevenzip.SevenZipArchiveHandler
+import com.google.common.hash.Hashing
 import com.intellij.ide.projectView.ViewSettings
 import com.intellij.ide.projectView.impl.nodes.BasePsiNode
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode
 import com.intellij.ide.projectView.impl.nodes.PsiFileNode
 import com.intellij.ide.util.treeView.AbstractTreeNode
 import com.intellij.openapi.application.ApplicationInfo
+import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleFileIndex
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.roots.ProjectRootManager
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileSystemItem
 import com.intellij.util.containers.ContainerUtil
 import com.intellij.util.io.FileAccessorCache
+import com.intellij.util.io.URLUtil
+import org.apache.commons.lang.StringUtils
+import java.io.File
+import java.nio.charset.Charset
+import java.nio.file.Files
 import java.util.*
 
 fun processPsiDirectoryChildren(
@@ -95,3 +104,66 @@ object AppInfoUtil {
 }
 
 
+object FSUtils {
+    const val FS_SEPARATOR = URLUtil.JAR_SEPARATOR
+    private const val NESTED_FILES_ROOT = "archives"
+    fun isArchiveFile(path: String): Boolean {
+        val extensionIndex = path.lastIndexOf('.') + 1
+        if (extensionIndex == 0 || extensionIndex >= path.length) {
+            return false
+        }
+        val extension = path.substring(extensionIndex).toLowerCase()
+        return ArchivePluginFileTypeFactory.ALL_EXTENSIONS.contains(extension)
+    }
+
+    fun isNestedFile(path: String): Boolean {
+        return StringUtils.countMatches(path, FS_SEPARATOR) > 0
+    }
+
+    fun getPluginTempFolder(): File {
+        val tmpDir = PathManager.getTempPath()
+        return File(tmpDir, PluginUtils.PLUGIN_NAME)
+    }
+
+    fun copyFileToTemp(file: VirtualFile): File {
+        val nestedFilesRoot = File(getPluginTempFolder(), NESTED_FILES_ROOT)
+        if (!nestedFilesRoot.exists()) {
+            nestedFilesRoot.mkdirs()
+        }
+        val id = Hashing.md5()
+            .newHasher()
+            .putString(file.name, Charset.defaultCharset())
+            .putLong(file.timeStamp)
+            .putLong(file.length)
+            .hash()
+            .toString()
+        val outFolder = File(nestedFilesRoot, id)
+        if (!outFolder.exists()) {
+            outFolder.mkdirs()
+        }
+        val outFile = File(outFolder, file.name)
+        if (!outFile.exists()) {
+            val stream = file.inputStream
+            // use direct out if the stream supports it
+            if (stream is SevenZipArchiveHandler.SevenZipInputStream) {
+                outFile.outputStream().buffered().use { output ->
+                    stream.directRead { bytes: ByteArray ->
+                        output.write(bytes)
+                        bytes.size
+                    }
+                }
+            } else {
+                Files.copy(stream, outFile.toPath())
+            }
+        }
+        return outFile
+    }
+
+    fun convertPathToIdea(path: String?): String {
+        return path?.replace('\\', '/') ?: ""
+    }
+}
+
+object PluginUtils {
+    const val PLUGIN_NAME = "archive-browser-idea"
+}

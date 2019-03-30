@@ -1,7 +1,6 @@
 package com.github.b3er.idea.plugins.arc.browser.base
 
-import com.intellij.openapi.fileTypes.FileType
-import com.intellij.openapi.fileTypes.FileTypeRegistry
+import com.github.b3er.idea.plugins.arc.browser.FSUtils
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.LocalFileProvider
@@ -10,9 +9,8 @@ import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem
 import com.intellij.openapi.vfs.newvfs.VfsImplUtil
 
 abstract class BaseArchiveFileSystem(
-    protected val fileType: FileType,
     protected val fsProtocol: String,
-    protected val fsSeparator: String
+    protected val fsSeparator: String = FSUtils.FS_SEPARATOR
 ) : ArchiveFileSystem(), LocalFileProvider {
     private fun getVirtualFileForArchive(entryFile: VirtualFile?): VirtualFile? {
         return if (entryFile == null) null else getLocalByEntry(entryFile)
@@ -38,9 +36,9 @@ abstract class BaseArchiveFileSystem(
 
     override fun getProtocol() = fsProtocol
 
-    override fun isCorrectFileType(local: VirtualFile): Boolean {
-        return FileTypeRegistry.getInstance().getFileTypeByFileName(local.name) == fileType
-    }
+//    override fun isCorrectFileType(local: VirtualFile): Boolean {
+//        return FileTypeRegistry.getInstance().getFileTypeByFileName(local.name) is fileType
+//    }
 
     override fun extractPresentableUrl(path: String) = super.extractPresentableUrl(
         StringUtil.trimEnd(path, fsSeparator)

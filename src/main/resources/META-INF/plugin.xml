@@ -12,6 +12,8 @@
                 implementation="com.github.b3er.idea.plugins.arc.browser.ArchivePluginFileTypeFactory"/>
         <virtualFileSystem key="7zip"
                            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.SevenZipArchiveFileSystemImpl"/>
+        <virtualFileSystem key="gzip"
+                           implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.GZipFileSystem"/>
     </extensions>
     <description><![CDATA[
         <html>

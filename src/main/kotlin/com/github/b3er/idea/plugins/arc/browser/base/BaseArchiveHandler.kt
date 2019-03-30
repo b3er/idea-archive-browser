@@ -1,8 +1,10 @@
 package com.github.b3er.idea.plugins.arc.browser.base
 
+import com.github.b3er.idea.plugins.arc.browser.AppInfoUtil
 import com.intellij.openapi.util.io.FileSystemUtil
 import com.intellij.openapi.vfs.impl.ArchiveHandler
 import com.intellij.util.io.FileAccessorCache
+import com.intellij.util.text.ByteArrayCharSequence
 import java.io.FileNotFoundException
 
 abstract class BaseArchiveHandler<T>(path: String) : ArchiveHandler(path) {
@@ -32,6 +34,19 @@ abstract class BaseArchiveHandler<T>(path: String) : ArchiveHandler(path) {
 
     override fun clearCaches() {
         accessorCache.remove(this)
+    }
+
+    protected fun convertNameToBytes(name: String?): CharSequence {
+        if(name == null) {
+            return convertNameToBytes("")
+        }
+        return if (AppInfoUtil.baselineVersion >= 183) {
+            @Suppress("MissingRecentApi")
+            ByteArrayCharSequence.convertToBytesIfPossible(name)
+        } else {
+            @Suppress("DEPRECATION")
+            ByteArrayCharSequence.convertToBytesIfAsciiString(name)
+        }
     }
 
     companion object {
