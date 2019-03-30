@@ -153,7 +153,9 @@ object FSUtils {
                     }
                 }
             } else {
-                Files.copy(stream, outFile.toPath())
+                stream.use {
+                    Files.copy(stream, outFile.toPath())
+                }
             }
         }
         return outFile
