@@ -68,7 +68,7 @@ class GZipFileSystem : BaseArchiveFileSystem(GZ_PROTOCOL) {
 
     override fun getHandler(entryFile: VirtualFile): ArchiveHandler {
         return VfsImplUtil.getHandler(this, entryFile) { localPath ->
-            if (localPath.endsWith(TarGzHandler.TAR_EXTENSION)) {
+            if (TarGzHandler.supportExtensions(localPath)) {
                 TarGzHandler(localPath)
             } else {
                 GZipHandler(localPath)

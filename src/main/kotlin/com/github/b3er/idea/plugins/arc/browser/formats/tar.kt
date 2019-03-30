@@ -20,7 +20,7 @@ class TarGzHandler(path: String) : BaseArchiveHandler<TarFile>(path) {
     companion object {
         private val CACHE = createCache<TarFile>(
             onCreate = {
-                if (it.file.name.endsWith(GZipFile.EXTENSION, true)) {
+                if (supportExtensions(it.file.canonicalPath)) {
                     TarFile(it.file.canonicalFile, GZipFile(it.file.canonicalFile))
                 } else {
                     throw IllegalArgumentException("Can't handle file ${it.file}")
@@ -28,6 +28,11 @@ class TarGzHandler(path: String) : BaseArchiveHandler<TarFile>(path) {
             }
         )
         const val TAR_EXTENSION = ".tar.gz"
+        const val TAR_GZ_EXTENSION = ".tgz"
+        fun supportExtensions(path: String): Boolean {
+            val pathLowerCase = path.toLowerCase()
+            return pathLowerCase.endsWith(TAR_EXTENSION) || pathLowerCase.endsWith(TAR_GZ_EXTENSION)
+        }
     }
 
     override fun createEntriesMap(): MutableMap<String, EntryInfo> {
