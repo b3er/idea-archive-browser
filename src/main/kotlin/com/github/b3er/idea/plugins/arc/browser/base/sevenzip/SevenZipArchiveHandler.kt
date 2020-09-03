@@ -22,7 +22,7 @@ open class SevenZipArchiveHandler(path: String) :
     BaseArchiveHandler<SevenZipArchiveHandler.SevenZipArchiveHolder>(path) {
     class SevenZipArchiveHolder(file: File) : Closeable {
         private val raf = RandomAccessFile(file, "r")
-        val archive = SevenZip.openInArchive(null, RandomAccessFileInStream(raf))!!
+        val archive = toArchive(raf)!!
         val simpleInterface = archive.simpleInterface!!
         override fun close() {
             raf.use {
@@ -30,6 +30,11 @@ open class SevenZipArchiveHandler(path: String) :
                     simpleInterface.close()
                 }
             }
+        }
+        private fun toArchive(raf: RandomAccessFile): IInArchive? {
+            val archive = SevenZip.openInArchive(null, RandomAccessFileInStream(raf))
+            raf.close()
+            return archive
         }
     }
 
