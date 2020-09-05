@@ -174,7 +174,8 @@ open class SevenZipArchiveHandler(path: String) :
 
     fun getInputStreamForFile(file: VirtualFile): SevenZipInputStream {
         return getFileHandle().getAndUse { holder ->
-            val item = getItemForPath(holder, file.path.split(FSUtils.FS_SEPARATOR).last()) ?: throw FileNotFoundException("$file!")
+            val item = getItemForPath(holder, file.path.split(FSUtils.FS_SEPARATOR).last())
+                ?: throw FileNotFoundException("$file!")
             SevenZipInputStream(holder, item)
         }
     }
@@ -275,7 +276,7 @@ open class SevenZipArchiveHandler(path: String) :
                     ISeekableStream.SEEK_SET -> openedFile.seek(offset)
                     ISeekableStream.SEEK_CUR -> openedFile.seek(openedFile.filePointer + offset)
                     ISeekableStream.SEEK_END -> openedFile.seek(openedFile.length() + offset)
-                    else -> throw RuntimeException("Seek: unknown origin: $origin");
+                    else -> throw RuntimeException("Seek: unknown origin: $origin")
                 }
                 filePointer = openedFile.filePointer
                 openedFile.filePointer

@@ -10,8 +10,6 @@ import com.intellij.ide.projectView.TreeStructureProvider
 import com.intellij.ide.projectView.ViewSettings
 import com.intellij.ide.projectView.impl.nodes.PsiFileNode
 import com.intellij.ide.util.treeView.AbstractTreeNode
-import com.intellij.idea.LoggerFactory
-import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.fileTypes.FileTypeConsumer
 import com.intellij.openapi.fileTypes.FileTypeFactory
 import com.intellij.openapi.vfs.LocalFileSystem
@@ -51,7 +49,7 @@ class ArchivePluginStructureProvider : TreeStructureProvider {
                         is GzipFileType -> GZipFileNode(node.project, psiFile, node.settings)
                         else -> node
                     }
-                }catch (t: Throwable) {
+                } catch (t: Throwable) {
                     // return the original node in case of any error
                     return node
                 }

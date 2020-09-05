@@ -10,6 +10,7 @@ import java.io.FileNotFoundException
 abstract class BaseArchiveHandler<T>(path: String) : ArchiveHandler(path) {
     @Volatile
     var myFileStamp: Long = DEFAULT_TIMESTAMP
+
     @Volatile
     var myFileLength: Long = DEFAULT_LENGTH
     abstract val accessorCache: FileAccessorCache<BaseArchiveHandler<T>, T>
@@ -33,7 +34,7 @@ abstract class BaseArchiveHandler<T>(path: String) : ArchiveHandler(path) {
     }
 
     protected fun convertNameToBytes(name: String?): CharSequence {
-        if(name == null) {
+        if (name == null) {
             return convertNameToBytes("")
         }
         return if (AppInfoUtil.baselineVersion >= 183) {

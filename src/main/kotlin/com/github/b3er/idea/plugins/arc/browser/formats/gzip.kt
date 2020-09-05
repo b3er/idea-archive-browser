@@ -6,7 +6,6 @@ import com.github.b3er.idea.plugins.arc.browser.base.BaseCompressedStreamFile
 import com.github.b3er.idea.plugins.arc.browser.base.BasePsiFileNode
 import com.github.b3er.idea.plugins.arc.browser.getAndUse
 import com.intellij.icons.AllIcons
-import com.intellij.ide.highlighter.ArchiveFileType
 import com.intellij.ide.projectView.ViewSettings
 import com.intellij.ide.util.treeView.AbstractTreeNode
 import com.intellij.openapi.fileTypes.FileType
@@ -154,6 +153,7 @@ open class GZipFile(private val file: File) : BaseCompressedStreamFile {
         if (ch1 or ch2 or ch3 or ch4 < 0) throw EOFException()
         return (ch1 shl 0) + (ch2 shl 8) + (ch3 shl 16) + (ch4.toLong() shl 24)
     }
+
     companion object {
         const val EXTENSION = ".gz"
     }
