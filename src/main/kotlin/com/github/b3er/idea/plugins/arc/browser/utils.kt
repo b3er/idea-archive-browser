@@ -1,5 +1,6 @@
 package com.github.b3er.idea.plugins.arc.browser
 
+import com.github.b3er.idea.plugins.arc.browser.base.sevenzip.SevenZipArchiveFileSystem
 import com.github.b3er.idea.plugins.arc.browser.base.sevenzip.SevenZipArchiveHandler
 import com.google.common.hash.Hashing
 import com.intellij.ide.projectView.ViewSettings
@@ -21,6 +22,7 @@ import com.intellij.psi.PsiFileSystemItem
 import com.intellij.util.containers.ContainerUtil
 import com.intellij.util.io.FileAccessorCache
 import com.intellij.util.io.URLUtil
+import net.sf.sevenzipjbinding.ExtractOperationResult
 import org.apache.commons.lang.StringUtils
 import java.io.File
 import java.nio.charset.Charset
@@ -143,22 +145,42 @@ object FSUtils {
         }
         val outFile = File(outFolder, file.name)
         if (!outFile.exists()) {
-            val stream = file.inputStream
-            // use direct out if the stream supports it
-            if (stream is SevenZipArchiveHandler.SevenZipInputStream) {
-                outFile.outputStream().buffered().use { output ->
-                    stream.directRead { bytes: ByteArray ->
-                        output.write(bytes)
-                        bytes.size
-                    }
-                }
-            } else {
-                stream.use {
+            if (!tryToDirectCopyFile(file, outFile)) {
+                val stream = file.inputStream
+                file.inputStream.use {
                     Files.copy(stream, outFile.toPath())
                 }
             }
         }
         return outFile
+    }
+
+    /**
+     * Trying to speed up file ops
+     */
+    private fun tryToDirectCopyFile(file: VirtualFile, outFile: File): Boolean {
+        return try {
+            tryToGetSevenZipStream(file)?.let { stream ->
+                stream.holder.useStream {
+                    outFile.outputStream().buffered().use { output ->
+                        stream.directRead { bytes: ByteArray ->
+                            output.write(bytes)
+                            bytes.size
+                        } == ExtractOperationResult.OK
+                    }
+                }
+            } ?: false
+        } catch (e: Throwable) {
+            false
+        }
+    }
+
+    private fun tryToGetSevenZipStream(file: VirtualFile): SevenZipArchiveHandler.SevenZipInputStream? {
+        return (file.fileSystem as? SevenZipArchiveFileSystem)?.let { fs ->
+            (fs.getHandlerForFile(file) as? SevenZipArchiveHandler)?.let { handler ->
+                handler.getInputStreamForFile(file)
+            }
+        }
     }
 
     fun convertPathToIdea(path: String?): String {

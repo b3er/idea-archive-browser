@@ -26,10 +26,7 @@ class ArchivePluginStructureProvider : TreeStructureProvider {
         return children.asSequence().map { convertArchiveNode(it) }.toCollection(ArrayList())
     }
 
-    override fun getData(
-        selected: MutableCollection<AbstractTreeNode<Any>>,
-        dataName: String
-    ): Any? {
+    override fun getData(selected: MutableCollection<AbstractTreeNode<*>>, dataId: String): Any? {
         return null
     }
 
@@ -101,7 +98,10 @@ class ArchivePluginFileTypeFactory : FileTypeFactory() {
             "cab",
             "udf",
             "txz",
-            "tlz"
+            "tlz",
+            "gem",
+            "gz",
+            "tar"
         )
         val ALL_EXTENSIONS = COMMON_ZIP_EXTENSIONS + ZIP_EXTENSIONS + SEVEN_ZIP_EXTENSIONS
     }

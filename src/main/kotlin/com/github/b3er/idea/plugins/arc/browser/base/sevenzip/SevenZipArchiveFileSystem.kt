@@ -33,6 +33,10 @@ abstract class SevenZipArchiveFileSystem(
         }
     }
 
+    fun getHandlerForFile(file: VirtualFile): ArchiveHandler? {
+        return getHandler(file)
+    }
+
     override fun isCorrectFileType(local: VirtualFile): Boolean {
         return FileTypeRegistry.getInstance().getFileTypeByFileName(local.name) is SevenZipArchiveFileType
     }

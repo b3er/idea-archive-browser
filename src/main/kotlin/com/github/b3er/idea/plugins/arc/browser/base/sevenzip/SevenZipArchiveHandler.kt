@@ -6,12 +6,9 @@ import com.github.b3er.idea.plugins.arc.browser.base.BaseArchiveHandler
 import com.github.b3er.idea.plugins.arc.browser.getAndUse
 import com.intellij.openapi.util.io.FileTooBigException
 import com.intellij.openapi.util.io.FileUtilRt
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.io.FileAccessorCache
-import net.sf.sevenzipjbinding.ExtractOperationResult
-import net.sf.sevenzipjbinding.IInArchive
-import net.sf.sevenzipjbinding.ISequentialOutStream
-import net.sf.sevenzipjbinding.SevenZip
-import net.sf.sevenzipjbinding.impl.RandomAccessFileInStream
+import net.sf.sevenzipjbinding.*
 import net.sf.sevenzipjbinding.simple.ISimpleInArchive
 import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
 import java.io.*
@@ -21,20 +18,31 @@ import java.util.concurrent.Executors
 open class SevenZipArchiveHandler(path: String) :
     BaseArchiveHandler<SevenZipArchiveHandler.SevenZipArchiveHolder>(path) {
     class SevenZipArchiveHolder(file: File) : Closeable {
-        private val raf = RandomAccessFile(file, "r")
-        val archive = toArchive(raf)!!
+        private val stream = ReusableRandomAccessFileStream(file)
+        val archive = toArchive()!!
         val simpleInterface = archive.simpleInterface!!
         override fun close() {
-            raf.use {
+            stream.use {
                 archive.use {
                     simpleInterface.close()
                 }
             }
         }
-        private fun toArchive(raf: RandomAccessFile): IInArchive? {
-            val archive = SevenZip.openInArchive(null, RandomAccessFileInStream(raf))
-            raf.close()
-            return archive
+
+        private fun toArchive(): IInArchive? {
+            return stream.use {
+                SevenZip.openInArchive(null, it)
+            }
+        }
+
+        fun <R> useStream(block: (SevenZipArchiveHolder) -> R): R {
+            return stream.use {
+                block(this)
+            }
+        }
+
+        fun closeStream() {
+            stream.close()
         }
     }
 
@@ -42,33 +50,40 @@ open class SevenZipArchiveHandler(path: String) :
         CACHE
 
     companion object {
-        private val CACHE = createCache(
+        private val CACHE = createCache<SevenZipArchiveHolder>(
             onCreate = {
                 SevenZipArchiveHolder(it.file.canonicalFile)
             },
-            onDispose = SevenZipArchiveHolder::close
+            onDispose = {
+                it.close()
+            },
+            onEqual = { v1, v2 ->
+                v1?.file?.canonicalPath == v2?.file?.canonicalPath
+            }
         )
         val IO_EXECUTOR = Executors.newCachedThreadPool()
     }
 
     override fun createEntriesMap(): MutableMap<String, EntryInfo> {
         return getFileHandle().getAndUse { holder ->
-            val simpleInArchive = holder.simpleInterface
-            val archive = holder.archive
-            LinkedHashMap<String, EntryInfo>(simpleInArchive.numberOfItems).also { map ->
-                map[""] = createRootEntry()
-                // If it's single file archive, we need to construct its name, because 7z leaves it empty
-                // For some archives (like xz) format is null
-                if (isSingleFileArchive(archive)) {
-                    val entry = simpleInArchive.archiveItems[0]
-                    var path = entry.ideaPath
-                    if (path.isEmpty()) {
-                        path = file.name.let { name -> name.substring(0, name.lastIndexOf('.')) }
-                    }
-                    getOrCreate(entry, map, simpleInArchive, path)
-                } else {
-                    simpleInArchive.archiveItems.forEach { item ->
-                        getOrCreate(item, map, simpleInArchive)
+            holder.useStream {
+                val simpleInArchive = holder.simpleInterface
+                val archive = holder.archive
+                LinkedHashMap<String, EntryInfo>(simpleInArchive.numberOfItems).also { map ->
+                    map[""] = createRootEntry()
+                    // If it's single file archive, we need to construct its name, because 7z leaves it empty
+                    // For some archives (like xz) format is null
+                    if (isSingleFileArchive(archive)) {
+                        val entry = simpleInArchive.archiveItems[0]
+                        var path = entry.ideaPath
+                        if (path.isEmpty()) {
+                            path = file.name.let { name -> name.substring(0, name.lastIndexOf('.')) }
+                        }
+                        getOrCreate(entry, map, simpleInArchive, path)
+                    } else {
+                        simpleInArchive.archiveItems.forEach { item ->
+                            getOrCreate(item, map, simpleInArchive)
+                        }
                     }
                 }
             }
@@ -136,41 +151,48 @@ open class SevenZipArchiveHandler(path: String) :
     }
 
     private fun getItemForPath(holder: SevenZipArchiveHolder, relativePath: String): ISimpleInArchiveItem? {
-        val simpleInArchive = holder.simpleInterface
-        // For single file archives don't look at path
-        val archive = holder.archive
-        return if (isSingleFileArchive(archive)) {
-            simpleInArchive.archiveItems.firstOrNull()
-        } else {
-            simpleInArchive.archiveItems.firstOrNull {
-                it.ideaPath == relativePath
+        return holder.useStream {
+            val simpleInArchive = holder.simpleInterface
+            // For single file archives don't look at path
+            val archive = holder.archive
+            if (isSingleFileArchive(archive)) {
+                simpleInArchive.archiveItems.firstOrNull()
+            } else {
+                simpleInArchive.archiveItems.firstOrNull {
+                    it.ideaPath == relativePath
+                }
             }
         }
-    }
-
-    private fun getInputStreamForItem(item: ISimpleInArchiveItem): InputStream {
-        return SevenZipInputStream(item)
     }
 
     override fun getInputStream(relativePath: String): InputStream {
         return getFileHandle().getAndUse { holder ->
             val item = getItemForPath(holder, relativePath) ?: throw FileNotFoundException("$file!/$relativePath")
-            getInputStreamForItem(item)
+            SevenZipInputStream(holder, item)
+        }
+    }
+
+    fun getInputStreamForFile(file: VirtualFile): SevenZipInputStream {
+        return getFileHandle().getAndUse { holder ->
+            val item = getItemForPath(holder, file.path.split(FSUtils.FS_SEPARATOR).last()) ?: throw FileNotFoundException("$file!")
+            SevenZipInputStream(holder, item)
         }
     }
 
     override fun contentsToByteArray(relativePath: String): ByteArray {
         return getFileHandle().getAndUse { holder ->
-            val item = getItemForPath(holder, relativePath) ?: throw FileNotFoundException("$file!/$relativePath")
-            if (FileUtilRt.isTooLarge(item.size ?: DEFAULT_LENGTH)) {
-                throw FileTooBigException("$file!/$relativePath")
-            } else {
-                ByteArrayOutputStream(item.size?.toInt()?: DEFAULT_BUFFER_SIZE).use { stream ->
-                    item.extractSlow {
-                        stream.write(it)
-                        it.size
+            holder.useStream {
+                val item = getItemForPath(holder, relativePath) ?: throw FileNotFoundException("$file!/$relativePath")
+                if (FileUtilRt.isTooLarge(item.size ?: DEFAULT_LENGTH)) {
+                    throw FileTooBigException("$file!/$relativePath")
+                } else {
+                    ByteArrayOutputStream(item.size?.toInt() ?: DEFAULT_BUFFER_SIZE).use { stream ->
+                        item.extractSlow {
+                            stream.write(it)
+                            it.size
+                        }
+                        stream.toByteArray()
                     }
-                    stream.toByteArray()
                 }
             }
         }
@@ -180,23 +202,26 @@ open class SevenZipArchiveHandler(path: String) :
         get() = FSUtils.convertPathToIdea(path)
 
 
-    class SevenZipInputStream(private val item: ISimpleInArchiveItem) : InputStream() {
+    class SevenZipInputStream(val holder: SevenZipArchiveHolder, private val item: ISimpleInArchiveItem) :
+        InputStream() {
         private var buffer: CircularByteBuffer? = null
         private val stream by lazy {
-            val b = CircularByteBuffer(1 * 1024 * 1024, true)
-            buffer = b
-            IO_EXECUTOR.submit {
-                b.outputStream.use { out ->
-                    item.extractSlow {
-                        out.write(it)
-                        it.size
+            holder.useStream {
+                val b = CircularByteBuffer(1 * 1024 * 1024, true)
+                buffer = b
+                IO_EXECUTOR.submit {
+                    b.outputStream.use { out ->
+                        item.extractSlow {
+                            out.write(it)
+                            it.size
+                        }
                     }
                 }
+                b.inputStream
             }
-            b.inputStream
         }
 
-        override fun read(): Int = stream.read()
+        override fun read(): Int = holder.useStream { stream.read() }
 
         override fun read(b: ByteArray?, off: Int, len: Int): Int = stream.read(b, off, len)
 
@@ -213,10 +238,67 @@ open class SevenZipArchiveHandler(path: String) :
         override fun close() {
             if (buffer != null) {
                 stream.close()
+                holder.closeStream()
             }
         }
 
-        fun directRead(stream: ISequentialOutStream): ExtractOperationResult = item.extractSlow(stream)
-        fun directRead(stream: (ByteArray) -> Int): ExtractOperationResult = item.extractSlow(stream)
+        fun directRead(stream: ISequentialOutStream): ExtractOperationResult =
+            item.extractSlow(stream)
+
+        fun directRead(stream: (ByteArray) -> Int): ExtractOperationResult =
+            item.extractSlow(stream)
+    }
+
+    class ReusableRandomAccessFileStream(private val file: File) : IInStream {
+        var raf: RandomAccessFile? = null
+        var filePointer = 0L
+
+        @Synchronized
+        @Throws(SevenZipException::class)
+        override fun read(bytes: ByteArray): Int {
+            return try {
+                val openedFile = getRandomFile()
+                val read = openedFile.read(bytes)
+                filePointer = openedFile.filePointer
+                if (read == -1) 0 else read
+            } catch (e: IOException) {
+                throw SevenZipException("Error reading random access file", e)
+            }
+        }
+
+        @Synchronized
+        @Throws(SevenZipException::class)
+        override fun seek(offset: Long, origin: Int): Long {
+            return try {
+                val openedFile = getRandomFile()
+                when (origin) {
+                    ISeekableStream.SEEK_SET -> openedFile.seek(offset)
+                    ISeekableStream.SEEK_CUR -> openedFile.seek(openedFile.filePointer + offset)
+                    ISeekableStream.SEEK_END -> openedFile.seek(openedFile.length() + offset)
+                    else -> throw RuntimeException("Seek: unknown origin: $origin");
+                }
+                filePointer = openedFile.filePointer
+                openedFile.filePointer
+            } catch (e: IOException) {
+                throw SevenZipException("Error while seek operation", e)
+            }
+        }
+
+        private fun getRandomFile(): RandomAccessFile {
+            return raf ?: RandomAccessFile(file, "r").also { newFile ->
+                newFile.seek(filePointer)
+                raf = newFile
+            }
+        }
+
+        @Synchronized
+        @Throws(IOException::class)
+        override fun close() {
+            raf?.also {
+                raf = null
+                it.close()
+            }
+        }
     }
 }
+

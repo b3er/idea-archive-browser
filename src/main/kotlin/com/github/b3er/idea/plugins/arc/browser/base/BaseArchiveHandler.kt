@@ -22,18 +22,14 @@ abstract class BaseArchiveHandler<T>(path: String) : ArchiveHandler(path) {
         if (attributes.lastModified == myFileStamp && attributes.length == myFileLength) {
             return handle
         }
-        accessorCache.remove(this)
+        clearCaches()
         handle.release()
         return accessorCache[this]
     }
 
-    override fun dispose() {
-        super.dispose()
-        accessorCache.remove(this)
-    }
-
     override fun clearCaches() {
         accessorCache.remove(this)
+        super.clearCaches()
     }
 
     protected fun convertNameToBytes(name: String?): CharSequence {
