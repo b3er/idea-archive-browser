@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.github.b3er'
-version '0.20'
+version '0.21'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -25,7 +25,7 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     pluginName 'idea-archive-browser'
-    version '2019.1'
+    version '2020.2'
     type "IC"
     plugins 'IntelliLang'
 }
