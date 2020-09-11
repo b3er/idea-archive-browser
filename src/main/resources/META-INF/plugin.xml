@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.github.b3er.idea.plugins.arc.browser</id>
     <name>Archive Browser</name>
-    <version>0.21</version>
+    <version>0.22</version>
     <vendor email="b3er@who.ms" url="https://github.com/b3er/idea-archive-browser">Ilya Usanov
     </vendor>
     <depends>com.intellij.modules.lang</depends>
@@ -15,12 +15,10 @@
         <virtualFileSystem key="gzip"
                            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.GZipFileSystem"/>
     </extensions>
-    <description><![CDATA[
-        <html>
+    <description>
         This plugin allows you to browse most archives like folders in IDEA.
         Supported archives (most of 7-zip supports): 7z, XZ, BZIP2, GZIP, TAR, ZIP, WIM, AR, ARJ, CAB, CHM, CPIO, CramFS, DMG, EXT, FAT, GPT, HFS, IHEX, ISO, LZH, LZMA, MBR, MSI, NSIS, NTFS, QCOW2, RAR, RPM, SquashFS, UDF, UEFI, VDI, VHD, VMDK, WIM, XAR and Z
-        </html>
-        ]]></description>
+    </description>
     <idea-version since-build="183.0"/>
     <change-notes><![CDATA[
         <html>
