@@ -1,8 +1,6 @@
 package com.github.b3er.idea.plugins.arc.browser
 
 import com.github.b3er.idea.plugins.arc.browser.base.sevenzip.SevenZipPsiFileNode
-import com.github.b3er.idea.plugins.arc.browser.formats.GZipFileNode
-import com.github.b3er.idea.plugins.arc.browser.formats.GzipFileType
 import com.github.b3er.idea.plugins.arc.browser.formats.PsiZipFileNode
 import com.github.b3er.idea.plugins.arc.browser.formats.SevenZipArchiveFileType
 import com.intellij.ide.highlighter.ArchiveFileType
@@ -46,7 +44,6 @@ class ArchivePluginStructureProvider : TreeStructureProvider {
                     return when (node.virtualFile?.fileType) {
                         is ArchiveFileType -> PsiZipFileNode(node.project, psiFile, node.settings)
                         is SevenZipArchiveFileType -> SevenZipPsiFileNode(node.project, psiFile, node.settings)
-                        is GzipFileType -> GZipFileNode(node.project, psiFile, node.settings)
                         else -> node
                     }
                 } catch (t: Throwable) {
@@ -99,17 +96,24 @@ class ArchivePluginFileTypeFactory : FileTypeFactory() {
             "tlz",
             "gem",
             "gz",
-            "tar"
+            "tar",
+            "tgz",
+            "tb2",
+            "tbz",
+            "tbz2",
+            "tz2",
+            "taz",
+            "tlz",
+            "tZ",
+            "taZ",
+            "tlz",
+            "tzst"
         )
         val ALL_EXTENSIONS = COMMON_ZIP_EXTENSIONS + ZIP_EXTENSIONS + SEVEN_ZIP_EXTENSIONS
     }
 
     override fun createFileTypes(consumer: FileTypeConsumer) {
-
-        consumer.consume(
-            SevenZipArchiveFileType, SEVEN_ZIP_EXTENSIONS.joinToString(separator = ";", postfix = ";")
-        )
-        consumer.consume(GzipFileType, "gz;tgz;")
+        consumer.consume(SevenZipArchiveFileType, SEVEN_ZIP_EXTENSIONS.joinToString(separator = ";", postfix = ";"))
         consumer.consume(ArchiveFileType.INSTANCE, ZIP_EXTENSIONS.joinToString(separator = ";", postfix = ";"))
     }
 }

@@ -12,6 +12,7 @@ import net.sf.sevenzipjbinding.*
 import net.sf.sevenzipjbinding.simple.ISimpleInArchive
 import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
 import java.io.*
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
@@ -61,7 +62,21 @@ open class SevenZipArchiveHandler(path: String) :
                 v1?.file?.canonicalPath == v2?.file?.canonicalPath
             }
         )
-        val IO_EXECUTOR = Executors.newCachedThreadPool()
+        val IO_EXECUTOR: ExecutorService = Executors.newCachedThreadPool()
+
+        private val MERGED_ARCHIVE_EXTENSIONS = mapOf(
+            ".tb2" to ".tar",
+            ".tbz" to ".tar",
+            ".tbz2" to ".tar",
+            ".tz2" to ".tar",
+            ".taz" to ".tar",
+            ".tgz" to ".tar",
+            ".tlz" to ".tar",
+            ".tZ" to ".tar",
+            ".taZ" to ".tar",
+            ".tlz" to ".tar",
+            ".tzst" to ".tar"
+        )
     }
 
     override fun createEntriesMap(): MutableMap<String, EntryInfo> {
@@ -71,14 +86,12 @@ open class SevenZipArchiveHandler(path: String) :
                 val archive = holder.archive
                 LinkedHashMap<String, EntryInfo>(simpleInArchive.numberOfItems).also { map ->
                     map[""] = createRootEntry()
-                    // If it's single file archive, we need to construct its name, because 7z leaves it empty
+                    // If it's single file archive, we need to construct its name
+                    // because 7z leaves it empty, respecting cases with merged extensions like "tgz"
                     // For some archives (like xz) format is null
                     if (isSingleFileArchive(archive)) {
                         val entry = simpleInArchive.archiveItems[0]
-                        var path = entry.ideaPath
-                        if (path.isEmpty()) {
-                            path = file.name.let { name -> name.substring(0, name.lastIndexOf('.')) }
-                        }
+                        val path = createEntryNameForSingleArchive(entry)
                         getOrCreate(entry, map, simpleInArchive, path)
                     } else {
                         simpleInArchive.archiveItems.forEach { item ->
@@ -90,6 +103,18 @@ open class SevenZipArchiveHandler(path: String) :
         }
     }
 
+    private fun createEntryNameForSingleArchive(entry: ISimpleInArchiveItem): String {
+        val path = entry.ideaPath
+        if (path.isNotEmpty()) {
+            return path
+        }
+        val archiveFileName = file.name
+        val nameWithoutEndExtension = archiveFileName.let { name -> name.substring(0, name.lastIndexOf('.')) }
+        // Handle merged archive extensions
+        return MERGED_ARCHIVE_EXTENSIONS.entries.find { (ext) ->
+            archiveFileName.endsWith(ext, ignoreCase = true)
+        }?.let { (_, nestedExt) -> "$nameWithoutEndExtension$nestedExt" } ?: nameWithoutEndExtension
+    }
 
     private fun getOrCreate(
         item: ISimpleInArchiveItem,
