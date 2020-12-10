@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.github.b3er.idea.plugins.arc.browser</id>
     <name>Archive Browser</name>
-    <version>0.22</version>
+    <version>0.23</version>
     <vendor email="b3er@who.ms" url="https://github.com/b3er/idea-archive-browser">Ilya Usanov
     </vendor>
     <depends>com.intellij.modules.lang</depends>
@@ -12,8 +12,6 @@
                 implementation="com.github.b3er.idea.plugins.arc.browser.ArchivePluginFileTypeFactory"/>
         <virtualFileSystem key="7zip"
                            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.SevenZipArchiveFileSystemImpl"/>
-        <virtualFileSystem key="gzip"
-                           implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.GZipFileSystem"/>
     </extensions>
     <description>
         This plugin allows you to browse most archives like folders in IDEA.
@@ -23,6 +21,17 @@
     <change-notes><![CDATA[
         <html>
         <ul>
+            <li>Version 0.23
+                <ul>
+                    <li>Fixed gz extension issue</li>
+                    <li>Enhanced tar short names support</li>
+                </ul>
+            </li>
+            <li>Version 0.22
+                <ul>
+                    <li>Fixed description text markup</li>
+                </ul>
+            </li>
             <li>Version 0.21
                 <ul>
                     <li>Fixed file lock issues</li>
