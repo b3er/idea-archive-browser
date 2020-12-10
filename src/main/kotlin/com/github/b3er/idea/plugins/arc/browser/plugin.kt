@@ -98,7 +98,6 @@ class ArchivePluginFileTypeFactory : FileTypeFactory() {
             "txz",
             "tlz",
             "gem",
-            "gz",
             "tar"
         )
         val ALL_EXTENSIONS = COMMON_ZIP_EXTENSIONS + ZIP_EXTENSIONS + SEVEN_ZIP_EXTENSIONS
