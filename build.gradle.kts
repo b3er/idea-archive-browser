@@ -28,7 +28,6 @@ repositories {
 }
 
 dependencies {
-  implementation(libs.kotlin.stdlib)
   implementation(libs.commons.compress)
   implementation(libs.xz)
 }
