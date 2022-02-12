@@ -11,17 +11,17 @@ import com.intellij.psi.PsiManager
 import com.intellij.util.containers.ContainerUtil
 
 abstract class BasePsiFileNode(
-    project: Project?, value: PsiFile,
-    viewSettings: ViewSettings?
+  project: Project?, value: PsiFile,
+  viewSettings: ViewSettings?
 ) : PsiFileNode(project, value, viewSettings) {
-    protected fun getChildrenForVirtualFile(rootFile: VirtualFile?): MutableCollection<AbstractTreeNode<*>> {
-        val project = project
-        if (project != null && rootFile != null) {
-            val psiDirectory = PsiManager.getInstance(project).findDirectory(rootFile)
-            if (psiDirectory != null) {
-                return processChildren(psiDirectory)
-            }
-        }
-        return ContainerUtil.emptyList<AbstractTreeNode<*>>()
+  protected fun getChildrenForVirtualFile(rootFile: VirtualFile?): MutableCollection<AbstractTreeNode<*>> {
+    val project = project
+    if (project != null && rootFile != null) {
+      val psiDirectory = PsiManager.getInstance(project).findDirectory(rootFile)
+      if (psiDirectory != null) {
+        return processChildren(psiDirectory)
+      }
     }
+    return ContainerUtil.emptyList()
+  }
 }

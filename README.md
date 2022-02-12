@@ -1,8 +1,22 @@
 # Archive browser
-This plugin allows you to browse most archives like folders in IDEA.
-        
-Supported archives (most of 7-zip supports): 7z, XZ, BZIP2, GZIP, TAR, ZIP, WIM, AR, ARJ, CAB, CHM, CPIO, CramFS, DMG, EXT, FAT, GPT, HFS, IHEX, ISO, LZH, LZMA, MBR, MSI, NSIS, NTFS, QCOW2, RAR, RPM, SquashFS, UDF, UEFI, VDI, VHD, VMDK, WIM, XAR and Z
 
-Nested archives are also supported
+This plugin allows you to browse most archives like folders in IDEA.
+
+The goal for this branch is to drop natives and use java pure implementation, for various systems support, including M1
+
+### Roadmap for branch
+
+- [x] zip (intellij)
+- [x] 7Zip (apache commons)
+- [x] Nested archives
+- [ ] RAR (junrar)
+- [ ] tar
+- [ ] gz
+- [ ] xz
+- [ ] cpio
+- [ ] more to come
+
 ### Install
-Install from [plugins repository in IDE](https://plugins.jetbrains.com/plugin/9491-archive-browser), or download jar file from releases.
+
+Install from [plugins repository in IDE](https://plugins.jetbrains.com/plugin/9491-archive-browser), or download jar
+file from releases.

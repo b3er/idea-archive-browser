@@ -7,17 +7,18 @@
     <depends>com.intellij.modules.lang</depends>
     <extensions defaultExtensionNs="com.intellij">
         <treeStructureProvider
-                implementation="com.github.b3er.idea.plugins.arc.browser.ArchivePluginStructureProvider"/>
-        <fileTypeFactory
-                implementation="com.github.b3er.idea.plugins.arc.browser.ArchivePluginFileTypeFactory"/>
-        <virtualFileSystem key="7zip"
-                           implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.SevenZipArchiveFileSystemImpl"/>
+            implementation="com.github.b3er.idea.plugins.arc.browser.ArchivePluginStructureProvider" />
+        <fileType name="ARCHIVE_7ZIP" extensions="7z" fieldName="INSTANCE"
+            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.SevenZipArchiveFileType" />
+        <virtualFileSystem
+            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.SevenZipArchiveFileSystemImpl"
+            key="7z" />
     </extensions>
     <description>
         This plugin allows you to browse most archives like folders in IDEA.
         Supported archives (most of 7-zip supports): 7z, XZ, BZIP2, GZIP, TAR, ZIP, WIM, AR, ARJ, CAB, CHM, CPIO, CramFS, DMG, EXT, FAT, GPT, HFS, IHEX, ISO, LZH, LZMA, MBR, MSI, NSIS, NTFS, QCOW2, RAR, RPM, SquashFS, UDF, UEFI, VDI, VHD, VMDK, WIM, XAR and Z
     </description>
-    <idea-version since-build="183.0"/>
+    <idea-version since-build="183.0" />
     <change-notes><![CDATA[
         <html>
         <ul>
@@ -78,6 +79,5 @@
         </ul>
         </html>
         ]]></change-notes>
-    <actions>
-    </actions>
+    <actions></actions>
 </idea-plugin>
