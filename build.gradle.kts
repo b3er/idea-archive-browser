@@ -29,8 +29,8 @@ repositories {
 
 dependencies {
   implementation(libs.kotlin.stdlib)
-  implementation("org.apache.commons:commons-compress:1.21")
-  implementation("org.tukaani:xz:1.9")
+  implementation(libs.commons.compress)
+  implementation(libs.xz)
 }
 
 intellij {

@@ -1,5 +1,7 @@
 [versions]
+commons-compress = "1.21"
 kotlin = "1.5.32"
+xz = "1.9"
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
@@ -7,3 +9,5 @@ intellij = { id = "org.jetbrains.intellij", version = "1.4.0" }
 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commons-compress" }
+xz = { module = "org.tukaani:xz", version.ref = "xz" }
