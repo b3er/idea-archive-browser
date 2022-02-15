@@ -1,7 +1,7 @@
 package com.github.b3er.idea.plugins.arc.browser.base
 
-import com.github.b3er.idea.plugins.arc.browser.FSUtils
 import com.github.b3er.idea.plugins.arc.browser.base.nest.SupportsNestedArchives
+import com.github.b3er.idea.plugins.arc.browser.util.FSUtils
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.openapi.util.io.FileUtil

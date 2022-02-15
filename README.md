@@ -9,11 +9,11 @@ The goal for this branch is to drop natives and use java pure implementation, fo
 - [x] zip (intellij)
 - [x] 7Zip (apache commons)
 - [x] Nested archives
-- [ ] RAR (junrar)
 - [ ] tar
-- [ ] gz
+- [x] gz
 - [ ] xz
 - [ ] cpio
+- [ ] RAR (junrar)
 - [ ] more to come
 
 ### Install

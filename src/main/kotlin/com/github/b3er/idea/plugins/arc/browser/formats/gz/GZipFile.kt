@@ -1,5 +1,6 @@
 package com.github.b3er.idea.plugins.arc.browser.formats.gz
 
+import com.github.b3er.idea.plugins.arc.browser.util.FSUtils
 import com.jcraft.jzlib.GZIPInputStream
 import java.io.EOFException
 import java.io.File
@@ -18,7 +19,10 @@ class GZipFile(private val file: File) {
     GZIPInputStream(file.inputStream()).use { stream ->
       stream.readHeader()
       timestamp = stream.modifiedtime
-      name = stream.name.takeIf { it.isNotBlank() } ?: file.name.removeSuffix(".${file.extension}")
+      name = stream.name.takeIf { it.isNotBlank() } ?: FSUtils.decorateMergedNameWithExtension(
+        file.extension,
+        file.name.removeSuffix(".${file.extension}")
+      )
     }
     //read uncompressed size according to RFC 1952 (http://www.zlib.org/rfc-gzip.html)
     length = RandomAccessFile(file, "r").use {
@@ -39,4 +43,5 @@ class GZipFile(private val file: File) {
     if (ch1 or ch2 or ch3 or ch4 < 0) throw EOFException()
     return (ch1 shl 0) + (ch2 shl 8) + (ch3 shl 16) + (ch4.toLong() shl 24)
   }
+
 }

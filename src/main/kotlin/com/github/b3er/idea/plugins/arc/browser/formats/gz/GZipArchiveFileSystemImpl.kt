@@ -1,8 +1,8 @@
 package com.github.b3er.idea.plugins.arc.browser.formats.gz
 
-import com.github.b3er.idea.plugins.arc.browser.FSUtils
 import com.github.b3er.idea.plugins.arc.browser.base.BaseArchiveFileSystem
 import com.github.b3er.idea.plugins.arc.browser.base.BaseArchiveHandler
+import com.github.b3er.idea.plugins.arc.browser.util.FSUtils
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.vfs.VirtualFileManager
 

@@ -1,6 +1,6 @@
 package com.github.b3er.idea.plugins.arc.browser.base
 
-import com.github.b3er.idea.plugins.arc.browser.processChildren
+import com.github.b3er.idea.plugins.arc.browser.util.processChildren
 import com.intellij.ide.projectView.ViewSettings
 import com.intellij.ide.projectView.impl.nodes.PsiFileNode
 import com.intellij.ide.util.treeView.AbstractTreeNode

@@ -27,6 +27,7 @@ class GzipArchiveFileType : BaseArchiveFileType {
   }
 
   companion object {
+    @Suppress("unused")
     @JvmStatic
     val INSTANCE = GzipArchiveFileType()
   }

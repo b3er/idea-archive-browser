@@ -2,6 +2,7 @@ package com.github.b3er.idea.plugins.arc.browser
 
 import com.github.b3er.idea.plugins.arc.browser.base.BaseArchiveFileType
 import com.github.b3er.idea.plugins.arc.browser.formats.zip.PsiZipFileNode
+import com.github.b3er.idea.plugins.arc.browser.util.FSUtils
 import com.intellij.ide.highlighter.ArchiveFileType
 import com.intellij.ide.projectView.TreeStructureProvider
 import com.intellij.ide.projectView.ViewSettings

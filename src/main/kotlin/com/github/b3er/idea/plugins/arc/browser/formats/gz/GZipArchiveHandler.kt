@@ -2,7 +2,7 @@ package com.github.b3er.idea.plugins.arc.browser.formats.gz
 
 import com.github.b3er.idea.plugins.arc.browser.base.BaseArchiveHandler
 import com.github.b3er.idea.plugins.arc.browser.base.nest.SupportsStreamForVirtualFile
-import com.github.b3er.idea.plugins.arc.browser.getAndUse
+import com.github.b3er.idea.plugins.arc.browser.util.getAndUse
 import com.intellij.openapi.util.io.FileTooBigException
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.vfs.VirtualFile

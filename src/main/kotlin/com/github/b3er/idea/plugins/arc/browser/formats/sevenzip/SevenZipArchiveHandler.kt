@@ -4,9 +4,7 @@ import com.github.b3er.idea.plugins.arc.browser.base.compress.CompressArchiveHan
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry
 import java.io.InputStream
 
-class SevenZipArchiveHandler(
-  path: String
-) : CompressArchiveHandler<SevenZArchiveEntry, SevenZipArchiveHolder>(path) {
+class SevenZipArchiveHandler(path: String) : CompressArchiveHandler<SevenZArchiveEntry, SevenZipArchiveHolder>(path) {
   override val accessorCache
     get() = cache
 

@@ -2,6 +2,8 @@
 commons-compress = "1.21"
 intellij = "1.4.0"
 kotlin = "1.5.32"
+junit = "5.6.0"
+junrar = "7.4.1"
 jzlib = "1.1.3"
 xz = "1.9"
 
@@ -11,5 +13,14 @@ intellij = { id = "org.jetbrains.intellij", version.ref = "intellij" }
 
 [libraries]
 commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commons-compress" }
+junrar = { module = "com.github.junrar:junrar", version.ref = "junrar" }
 jzlib = { module = "com.jcraft:jzlib", version.ref = "jzlib" }
 xz = { module = "org.tukaani:xz", version.ref = "xz" }
+
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
+junit-library = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+
+[bundles]
+testing = ["junit-library", "kotlin-test", "kotlin-test-junit5"]
