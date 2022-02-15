@@ -7,11 +7,12 @@ import java.io.InputStream
 class SevenZipArchiveHandler(
   path: String
 ) : CompressArchiveHandler<SevenZArchiveEntry, SevenZipArchiveHolder>(path) {
-  override val accessorCache = CACHE
+  override val accessorCache
+    get() = cache
 
-  companion object {
-    private val CACHE = createCache<SevenZipArchiveHolder>(onCreate = { SevenZipArchiveHolder(it.file.canonicalFile) })
-  }
+  companion object : CacheProvider<SevenZipArchiveHolder> by cacheProvider(
+    onCreate = { SevenZipArchiveHolder(it.file.canonicalFile) }
+  )
 
   override fun SevenZipArchiveHolder.getEntries(): Iterable<SevenZArchiveEntry> {
     return archive.entries
@@ -25,4 +26,3 @@ class SevenZipArchiveHandler(
     return hasLastModifiedDate
   }
 }
-

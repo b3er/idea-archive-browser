@@ -29,6 +29,7 @@ repositories {
 
 dependencies {
   implementation(libs.commons.compress)
+  implementation(libs.jzlib)
   implementation(libs.xz)
 }
 

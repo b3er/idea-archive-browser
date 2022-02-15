@@ -9,10 +9,15 @@
         <treeStructureProvider
             implementation="com.github.b3er.idea.plugins.arc.browser.ArchivePluginStructureProvider" />
         <fileType name="ARCHIVE_7ZIP" extensions="7z" fieldName="INSTANCE"
-            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.SevenZipArchiveFileType" />
+            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.sevenzip.SevenZipArchiveFileType" />
+        <fileType name="ARCHIVE_GZIP" extensions="gz" fieldName="INSTANCE"
+            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.gz.GzipArchiveFileType" />
         <virtualFileSystem
-            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.SevenZipArchiveFileSystemImpl"
+            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.sevenzip.SevenZipArchiveFileSystemImpl"
             key="7z" />
+        <virtualFileSystem
+            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.gz.GZipArchiveFileSystemImpl"
+            key="gz" />
     </extensions>
     <description>
         This plugin allows you to browse most archives like folders in IDEA.

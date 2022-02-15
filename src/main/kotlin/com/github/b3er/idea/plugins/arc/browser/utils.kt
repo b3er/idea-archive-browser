@@ -101,14 +101,6 @@ class PsiGenericDirectoryNode(
 object FSUtils {
   const val FS_SEPARATOR = URLUtil.JAR_SEPARATOR
   private const val NESTED_FILES_ROOT = "archives"
-  fun isArchiveFile(path: String): Boolean {
-    val extensionIndex = path.lastIndexOf('.') + 1
-    if (extensionIndex == 0 || extensionIndex >= path.length) {
-      return false
-    }
-    val extension = path.substring(extensionIndex).lowercase()
-    return ALL_EXTENSIONS.contains(extension)
-  }
 
   fun isNestedFile(path: String): Boolean {
     return StringUtils.countMatches(path, FS_SEPARATOR) > 0
@@ -140,7 +132,7 @@ object FSUtils {
     }
 
     val outFile = File(outFolder, file.name)
-    if (!outFile.exists()) {
+    if (!outFile.exists() || outFile.length() != file.length) {
       if (!tryToDirectCopyFile(file, outFile)) {
         val stream = file.inputStream
         file.inputStream.buffered().use {

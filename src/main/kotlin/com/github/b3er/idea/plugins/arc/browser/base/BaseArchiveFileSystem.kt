@@ -1,18 +1,35 @@
 package com.github.b3er.idea.plugins.arc.browser.base
 
 import com.github.b3er.idea.plugins.arc.browser.FSUtils
+import com.github.b3er.idea.plugins.arc.browser.base.nest.SupportsNestedArchives
+import com.intellij.openapi.fileTypes.FileType
+import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.impl.ArchiveHandler
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem
 import com.intellij.openapi.vfs.newvfs.VfsImplUtil
 
 abstract class BaseArchiveFileSystem(
   private val fsProtocol: String,
   private val fsSeparator: String = FSUtils.FS_SEPARATOR
-) : ArchiveFileSystem() {
-  private fun getVirtualFileForArchive(entryFile: VirtualFile?): VirtualFile? {
-    return if (entryFile == null) null else getLocalByEntry(entryFile)
+) : ArchiveFileSystem(), SupportsNestedArchives {
+  abstract fun getHandlerForPath(localPath: String): BaseArchiveHandler<*>
+  abstract fun isCorrectFileType(fileType: FileType): Boolean
+
+  override fun getHandler(entryFile: VirtualFile): ArchiveHandler {
+    return VfsImplUtil.getHandler(this, entryFile) { localPath ->
+      getHandlerForPath(localPath)
+    }
+  }
+
+  override fun getHandlerForFile(file: VirtualFile): ArchiveHandler {
+    return getHandler(file)
+  }
+
+  override fun isCorrectFileType(local: VirtualFile): Boolean {
+    return isCorrectFileType(FileTypeRegistry.getInstance().getFileTypeByFileName(local.name))
   }
 
   fun getArchiveRootForLocalFile(file: VirtualFile): VirtualFile? {

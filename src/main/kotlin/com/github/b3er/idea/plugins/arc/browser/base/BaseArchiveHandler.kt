@@ -32,22 +32,40 @@ abstract class BaseArchiveHandler<T>(path: String) : ArchiveHandler(path) {
     super.clearCaches()
   }
 
+  interface CacheProvider<T> {
+    val cache: FileAccessorCache<BaseArchiveHandler<T>, T>
+  }
 
   companion object {
-    fun <T : Closeable> createCache(
+    fun <T> cacheProvider(
       protectedQueueSize: Int = 20,
       probationalQueueSize: Int = 20,
       onCreate: (key: BaseArchiveHandler<T>) -> T,
-      onDispose: (value: T) -> Unit = { it.close() },
+      onDispose: (value: T) -> Unit = { (it as? Closeable)?.close() },
       onEqual: (val1: BaseArchiveHandler<T>?, val2: BaseArchiveHandler<T>?) -> Boolean = { v1, v2 ->
         v1?.file?.canonicalPath == v2?.file?.canonicalPath
       }
+    ): CacheProvider<T> {
+      return object : CacheProvider<T> {
+        private val _cache = createCache(protectedQueueSize, probationalQueueSize, onCreate, onDispose, onEqual)
+        override val cache: FileAccessorCache<BaseArchiveHandler<T>, T>
+          get() = _cache
+      }
+
+    }
+
+    fun <T> createCache(
+      protectedQueueSize: Int = 20,
+      probationalQueueSize: Int = 20,
+      onCreate: (key: BaseArchiveHandler<T>) -> T,
+      onDispose: (value: T) -> Unit,
+      onEqual: (val1: BaseArchiveHandler<T>?, val2: BaseArchiveHandler<T>?) -> Boolean
     ): FileAccessorCache<BaseArchiveHandler<T>, T> {
       return object : FileAccessorCache<BaseArchiveHandler<T>, T>(protectedQueueSize, probationalQueueSize) {
         override fun createAccessor(key: BaseArchiveHandler<T>): T {
           val attributes = FileSystemUtil.getAttributes(key.file.canonicalFile)
-          key.myFileStamp = attributes?.lastModified ?: ArchiveHandler.DEFAULT_TIMESTAMP
-          key.myFileLength = attributes?.length ?: ArchiveHandler.DEFAULT_LENGTH
+          key.myFileStamp = attributes?.lastModified ?: DEFAULT_TIMESTAMP
+          key.myFileLength = attributes?.length ?: DEFAULT_LENGTH
           return onCreate(key)
         }
 

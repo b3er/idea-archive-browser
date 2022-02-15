@@ -31,7 +31,7 @@ abstract class CompressArchiveHandler<E : ArchiveEntry, H>(path: String) : BaseA
       if (FileUtilRt.isTooLarge(entry.size)) {
         throw FileTooBigException("$file!/$relativePath")
       }
-      holder.getInputStream(entry).use { it.readBytes() }
+      holder.getInputStream(entry).buffered().use { it.readBytes() }
     }
   }
 

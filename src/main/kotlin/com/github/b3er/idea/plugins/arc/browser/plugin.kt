@@ -1,7 +1,6 @@
 package com.github.b3er.idea.plugins.arc.browser
 
-import com.github.b3er.idea.plugins.arc.browser.formats.SevenZipArchiveFileType
-import com.github.b3er.idea.plugins.arc.browser.formats.sevenzip.SevenZipPsiFileNode
+import com.github.b3er.idea.plugins.arc.browser.base.BaseArchiveFileType
 import com.github.b3er.idea.plugins.arc.browser.formats.zip.PsiZipFileNode
 import com.intellij.ide.highlighter.ArchiveFileType
 import com.intellij.ide.projectView.TreeStructureProvider
@@ -25,7 +24,7 @@ class ArchivePluginStructureProvider : TreeStructureProvider {
       if (virtualFile != null) {
         try {
           var psiFile = node.value
-          if (FSUtils.isArchiveFile(virtualFile.path)
+          if ((psiFile.fileType is BaseArchiveFileType || psiFile.fileType is ArchiveFileType)
             && FSUtils.isNestedFile(virtualFile.path)
           ) {
             val tempNestedFile = FSUtils.copyFileToTemp(virtualFile)
@@ -34,9 +33,9 @@ class ArchivePluginStructureProvider : TreeStructureProvider {
               psiFile = PsiManager.getInstance(node.project!!).findFile(nestedVirtualFile)
             }
           }
-          return when (node.virtualFile?.fileType) {
+          return when (val fileType = node.virtualFile?.fileType) {
+            is BaseArchiveFileType -> fileType.createPsiNode(node.project, psiFile, node.settings)
             is ArchiveFileType -> PsiZipFileNode(node.project, psiFile, node.settings)
-            is SevenZipArchiveFileType -> SevenZipPsiFileNode(node.project, psiFile, node.settings)
             else -> node
           }
         } catch (t: Throwable) {
@@ -48,120 +47,3 @@ class ArchivePluginStructureProvider : TreeStructureProvider {
     return node
   }
 }
-
-val COMMON_ZIP_EXTENSIONS = sortedSetOf("jar", "war", "ear")
-val ZIP_EXTENSIONS = sortedSetOf("epub", "htmlz", "zip")
-val SEVEN_ZIP_EXTENSIONS = sortedSetOf(
-  "rar",
-  "deb",
-  "tar",
-  "lzma",
-  "cpio",
-  "bz2",
-  "7z",
-  "xz",
-  "arj",
-  "iso",
-  "lzh",
-  "msi",
-  "rpm",
-  "squashfs",
-  "sfs",
-  "xar",
-  "z",
-  "vmdk",
-  "wim",
-  "vhd",
-  "vdi",
-  "uefi",
-  "udf",
-  "hfs",
-  "dmg",
-  "ext",
-  "fat",
-  "ntfs",
-  "chm",
-  "cab",
-  "udf",
-  "txz",
-  "tlz",
-  "gem",
-  "gz",
-  "tar",
-  "tgz",
-  "tb2",
-  "tbz",
-  "tbz2",
-  "tz2",
-  "taz",
-  "tlz",
-  "tZ",
-  "taZ",
-  "tlz",
-  "tzst"
-)
-val ALL_EXTENSIONS = COMMON_ZIP_EXTENSIONS + ZIP_EXTENSIONS + SEVEN_ZIP_EXTENSIONS
-/*
-class ArchivePluginFileTypeFactory : FileTypeFactory() {
-  companion object {
-    val COMMON_ZIP_EXTENSIONS = sortedSetOf("jar", "war", "ear")
-    val ZIP_EXTENSIONS = sortedSetOf("epub", "htmlz", "zip")
-    val SEVEN_ZIP_EXTENSIONS = sortedSetOf(
-      "rar",
-      "deb",
-      "tar",
-      "lzma",
-      "cpio",
-      "bz2",
-      "7z",
-      "xz",
-      "arj",
-      "iso",
-      "lzh",
-      "msi",
-      "rpm",
-      "squashfs",
-      "sfs",
-      "xar",
-      "z",
-      "vmdk",
-      "wim",
-      "vhd",
-      "vdi",
-      "uefi",
-      "udf",
-      "hfs",
-      "dmg",
-      "ext",
-      "fat",
-      "ntfs",
-      "chm",
-      "cab",
-      "udf",
-      "txz",
-      "tlz",
-      "gem",
-      "gz",
-      "tar",
-      "tgz",
-      "tb2",
-      "tbz",
-      "tbz2",
-      "tz2",
-      "taz",
-      "tlz",
-      "tZ",
-      "taZ",
-      "tlz",
-      "tzst"
-    )
-    val ALL_EXTENSIONS = COMMON_ZIP_EXTENSIONS + ZIP_EXTENSIONS + SEVEN_ZIP_EXTENSIONS
-  }
-
-  override fun createFileTypes(consumer: FileTypeConsumer) {
-    consumer.consume(CompressArchiveFileType, listOf("7z").joinToString(separator = ";", postfix = ";"))
-    consumer.consume(ArchiveFileType.INSTANCE, ZIP_EXTENSIONS.joinToString(separator = ";", postfix = ";"))
-  }
-}
-
-*/
