@@ -2,10 +2,12 @@ package com.github.b3er.idea.plugins.arc.browser.util
 
 import com.github.b3er.idea.plugins.arc.browser.base.nest.SupportsNestedArchives
 import com.github.b3er.idea.plugins.arc.browser.base.nest.SupportsStreamForVirtualFile
+import com.github.b3er.idea.plugins.arc.browser.base.sevenzip.SevenZipInputStream
 import com.google.common.hash.Hashing
 import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.io.URLUtil
+import net.sf.sevenzipjbinding.ExtractOperationResult
 import org.apache.commons.lang.StringUtils
 import java.io.File
 import java.io.InputStream
@@ -68,9 +70,20 @@ object FSUtils {
 
   private fun tryToDirectCopyFile(file: VirtualFile, outFile: File): Boolean {
     return tryToGetCompressStream(file)?.let { stream ->
-      stream.use {
-        outFile.outputStream().buffered().use { output ->
-          stream.copyTo(output) == file.length
+      if (stream is SevenZipInputStream) {
+        stream.holder.useStream {
+          outFile.outputStream().buffered().use { output ->
+            stream.directRead { bytes: ByteArray ->
+              output.write(bytes)
+              bytes.size
+            } == ExtractOperationResult.OK
+          }
+        }
+      } else {
+        stream.use {
+          outFile.outputStream().buffered().use { output ->
+            stream.copyTo(output) == file.length
+          }
         }
       }
     } ?: false
@@ -80,6 +93,10 @@ object FSUtils {
     return (file.fileSystem as? SupportsNestedArchives)?.let { fs ->
       (fs.getHandlerForFile(file) as? SupportsStreamForVirtualFile)?.getInputStreamForFile(file)
     }
+  }
+
+  fun convertPathToIdea(path: String?): String {
+    return path?.replace('\\', '/') ?: ""
   }
 
   private val MERGED_ARCHIVE_EXTENSIONS = mapOf(

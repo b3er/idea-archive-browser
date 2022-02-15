@@ -28,9 +28,8 @@ repositories {
 }
 
 dependencies {
-  implementation(libs.commons.compress)
-  implementation(libs.jzlib)
-  implementation(libs.xz)
+  implementation(libs.sevenzip)
+  implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 }
 
 intellij {

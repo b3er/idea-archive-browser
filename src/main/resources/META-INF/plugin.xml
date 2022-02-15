@@ -8,21 +8,13 @@
     <extensions defaultExtensionNs="com.intellij">
         <treeStructureProvider
             implementation="com.github.b3er.idea.plugins.arc.browser.ArchivePluginStructureProvider" />
-        <fileType name="ARCHIVE_7ZIP" extensions="7z" fieldName="INSTANCE"
+        <fileType name="ARCHIVE_7ZIP"
+            extensions="rar;deb;tar;lzma;cpio;bz2;7z;xz;arj;iso;lzh;msi;rpm;squashfs;sfs;xar;z;vmdk;wim;vhd;vdi;uefi;udf;hfs;dmg;ext;fat;ntfs;chm;cab;udf;txz;tlz;gem;gz;tar;tgz;tb2;tbz;tbz2;tz2;taz;tlz;tZ;taZ;tlz;tzst"
+            fieldName="INSTANCE"
             implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.sevenzip.SevenZipArchiveFileType" />
-        <fileType name="ARCHIVE_GZIP" extensions="gz;tgz" fieldName="INSTANCE"
-            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.gz.GzipArchiveFileType" />
-        <fileType name="ARCHIVE_TAR" extensions="tar" fieldName="INSTANCE"
-            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.tar.TarArchiveFileType" />
         <virtualFileSystem
             implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.sevenzip.SevenZipArchiveFileSystemImpl"
             key="7z" />
-        <virtualFileSystem
-            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.gz.GZipArchiveFileSystemImpl"
-            key="gz" />
-        <virtualFileSystem
-            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.tar.TarArchiveFileSystemImpl"
-            key="tar" />
     </extensions>
     <description>
         This plugin allows you to browse most archives like folders in IDEA.

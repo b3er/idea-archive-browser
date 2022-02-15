@@ -32,3 +32,4 @@ class SevenZipArchiveFileType : BaseArchiveFileType {
     val INSTANCE = SevenZipArchiveFileType()
   }
 }
+

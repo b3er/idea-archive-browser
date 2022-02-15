@@ -1,7 +1,7 @@
 package com.github.b3er.idea.plugins.arc.browser.formats.sevenzip
 
 import com.github.b3er.idea.plugins.arc.browser.base.BaseArchiveFileSystem
-import com.github.b3er.idea.plugins.arc.browser.base.compress.CompressArchiveHandler
+import com.github.b3er.idea.plugins.arc.browser.base.sevenzip.SevenZipArchiveHandler
 import com.github.b3er.idea.plugins.arc.browser.util.FSUtils
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.vfs.VirtualFileManager
@@ -14,7 +14,7 @@ class SevenZipArchiveFileSystemImpl : BaseArchiveFileSystem(PROTOCOL, FSUtils.FS
       get() = VirtualFileManager.getInstance().getFileSystem(PROTOCOL) as BaseArchiveFileSystem
   }
 
-  override fun getHandlerForPath(localPath: String): CompressArchiveHandler<*, *> {
+  override fun getHandlerForPath(localPath: String): SevenZipArchiveHandler {
     return SevenZipArchiveHandler(localPath)
   }
 
