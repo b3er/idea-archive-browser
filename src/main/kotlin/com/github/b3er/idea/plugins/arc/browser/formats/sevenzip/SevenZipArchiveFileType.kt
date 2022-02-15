@@ -18,7 +18,7 @@ class SevenZipArchiveFileType : BaseArchiveFileType {
 
   override fun getName() = "ARCHIVE_7ZIP"
 
-  override fun getDescription() = "7zip archive"
+  override fun getDescription() = "Archive (Archive Browser)"
 
   override fun isBinary() = true
 
