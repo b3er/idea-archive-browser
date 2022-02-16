@@ -55,7 +55,7 @@ object FSUtils {
     if (!outFile.exists() || outFile.length() != file.length) {
       if (!tryToDirectCopyFile(file, outFile)) {
         val stream = file.inputStream
-        file.inputStream.buffered().use {
+        file.inputStream.use {
           Files.copy(stream, outFile.toPath())
         }
       }
@@ -71,17 +71,10 @@ object FSUtils {
   private fun tryToDirectCopyFile(file: VirtualFile, outFile: File): Boolean {
     return tryToGetCompressStream(file)?.let { stream ->
       if (stream is SevenZipInputStream) {
-        stream.holder.useStream {
-          outFile.outputStream().buffered().use { output ->
-            stream.directRead { bytes: ByteArray ->
-              output.write(bytes)
-              bytes.size
-            } == ExtractOperationResult.OK
-          }
-        }
+        stream.extract(outFile) == ExtractOperationResult.OK
       } else {
         stream.use {
-          outFile.outputStream().buffered().use { output ->
+          outFile.outputStream().use { output ->
             stream.copyTo(output) == file.length
           }
         }

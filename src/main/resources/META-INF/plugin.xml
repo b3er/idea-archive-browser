@@ -24,6 +24,12 @@
     <change-notes><![CDATA[
         <html>
         <ul>
+            <li>Version 0.31
+                <ul>
+                    <li>Apple silicon support (experimental)</li>
+                    <li>Small fixes and improvements</li>
+                </ul>
+            </li>
             <li>Version 0.23
                 <ul>
                     <li>Fixed gz extension issue</li>

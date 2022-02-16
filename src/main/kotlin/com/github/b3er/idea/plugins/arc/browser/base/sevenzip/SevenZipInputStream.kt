@@ -2,29 +2,18 @@ package com.github.b3er.idea.plugins.arc.browser.base.sevenzip
 
 import com.Ostermiller.util.CircularByteBuffer
 import net.sf.sevenzipjbinding.ExtractOperationResult
-import net.sf.sevenzipjbinding.ISequentialOutStream
 import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
+import java.io.File
+import java.io.FilterInputStream
 import java.io.InputStream
+import java.nio.file.Files
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class SevenZipInputStream(val holder: SevenZipArchiveHolder, private val item: ISimpleInArchiveItem) : InputStream() {
-  private var buffer: CircularByteBuffer? = null
-  private val stream by lazy {
-    holder.useStream {
-      val b = CircularByteBuffer(item.size.coerceAtMost(4 * 1024 * 1024).toInt(), true)
-      buffer = b
-      IO_EXECUTOR.submit {
-        b.outputStream.use { out ->
-          item.extractSlow {
-            out.write(it)
-            it.size
-          }
-        }
-      }
-      b.inputStream
-    }
-  }
+
+class SevenZipInputStream(private val holder: SevenZipArchiveHolder, private val item: ISimpleInArchiveItem) :
+  InputStream() {
+  private val stream by lazy { AsyncCircularByteBuffer(8192).fill(holder, item) }
 
   override fun read(): Int = holder.useStream { stream.read() }
 
@@ -41,19 +30,50 @@ class SevenZipInputStream(val holder: SevenZipArchiveHolder, private val item: I
   override fun markSupported(): Boolean = stream.markSupported()
 
   override fun close() {
-    if (buffer != null) {
-      stream.close()
-      holder.closeStream()
+    stream.close()
+    holder.closeStream()
+  }
+
+  fun extract(file: File): ExtractOperationResult {
+    val output = Files.newOutputStream(file.toPath())
+    return output.use {
+      holder.useStream {
+        item.extractSlow { data -> data?.also(output::write)?.size ?: 0 }
+      }
+    }
+  }
+}
+
+class AsyncCircularByteBuffer(size: Int) : CircularByteBuffer(size, true) {
+  private var isClosed = false
+
+  fun fill(holder: SevenZipArchiveHolder, item: ISimpleInArchiveItem): InputStream {
+    EXECUTOR.submit {
+      outputStream.use { output ->
+        holder.useStream {
+          item.extractSlow { data ->
+            if (!isClosed) {
+              data?.also(output::write)?.size ?: 0
+            } else {
+              throw InterruptedException()
+            }
+          }
+        }
+      }
+    }
+    return inputStream
+  }
+
+  override fun getInputStream(): InputStream {
+    return object : FilterInputStream(super.getInputStream()) {
+      override fun close() {
+        super.close()
+        isClosed = true
+      }
     }
   }
 
-  fun directRead(stream: ISequentialOutStream): ExtractOperationResult =
-    item.extractSlow(stream)
-
-  fun directRead(stream: (ByteArray) -> Int): ExtractOperationResult =
-    item.extractSlow(stream)
-
   companion object {
-    val IO_EXECUTOR: ExecutorService = Executors.newCachedThreadPool()
+    private val EXECUTOR: ExecutorService = Executors.newCachedThreadPool()
   }
 }

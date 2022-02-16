@@ -1,3 +1,4 @@
+import org.jetbrains.intellij.tasks.PatchPluginXmlTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -7,7 +8,7 @@ plugins {
 }
 
 group = "com.github.b3er"
-version = "0.23"
+version = "0.31"
 
 java {
   toolchain {
@@ -38,9 +39,9 @@ intellij {
   type.set("IC")
   plugins.add("IntelliLang")
 }
-
-val patchPluginXml by tasks
-patchPluginXml.enabled = false
+tasks.withType<PatchPluginXmlTask> {
+  untilBuild.set("")
+}
 
 
 
