@@ -11,11 +11,12 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
-class SevenZipInputStream(private val holder: SevenZipArchiveHolder, private val item: ISimpleInArchiveItem) :
-  InputStream() {
-  private val stream by lazy { AsyncCircularByteBuffer(8192).fill(holder, item) }
+class SevenZipInputStream(
+  private val holder: SevenZipArchiveHolder, private val item: ISimpleInArchiveItem
+) : InputStream() {
+  private val stream by lazy { AsyncCircularByteBuffer(BUFFER_SIZE).fill(holder, item) }
 
-  override fun read(): Int = holder.useStream { stream.read() }
+  override fun read(): Int = stream.read()
 
   override fun read(b: ByteArray?, off: Int, len: Int): Int = stream.read(b, off, len)
 
@@ -42,11 +43,14 @@ class SevenZipInputStream(private val holder: SevenZipArchiveHolder, private val
       }
     }
   }
+
+  companion object {
+    const val BUFFER_SIZE = 32768
+  }
 }
 
 class AsyncCircularByteBuffer(size: Int) : CircularByteBuffer(size, true) {
   private var isClosed = false
-
   fun fill(holder: SevenZipArchiveHolder, item: ISimpleInArchiveItem): InputStream {
     EXECUTOR.submit {
       outputStream.use { output ->

@@ -3,19 +3,16 @@ package com.github.b3er.idea.plugins.arc.browser.base.sevenzip
 import net.sf.sevenzipjbinding.IInArchive
 import net.sf.sevenzipjbinding.IInStream
 import net.sf.sevenzipjbinding.SevenZip
-import net.sf.sevenzipjbinding.simple.ISimpleInArchive
+import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
 import java.io.Closeable
 import java.io.File
 
 class SevenZipArchiveHolder(file: File) : Closeable {
   private val stream = ReusableRandomAccessFileStream(file)
-  val archive: IInArchive = toArchive()!!
-  val simpleInterface: ISimpleInArchive = archive.simpleInterface!!
-
-
-  private fun toArchive(): IInArchive? {
-    return useStream {
-      SevenZip.openInArchive(null, it)
+  val archive: IInArchive = SevenZip.openInArchive(null, stream)
+  val archiveItems: Array<ISimpleInArchiveItem> by lazy {
+    stream.use {
+      archive.simpleInterface.archiveItems
     }
   }
 
@@ -31,9 +28,7 @@ class SevenZipArchiveHolder(file: File) : Closeable {
 
   override fun close() {
     stream.use {
-      archive.use {
-        simpleInterface.close()
-      }
+      archive.close()
     }
   }
 }

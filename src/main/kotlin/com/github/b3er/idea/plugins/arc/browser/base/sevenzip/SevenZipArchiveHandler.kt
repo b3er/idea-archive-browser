@@ -20,35 +20,18 @@ class SevenZipArchiveHandler(
   override val accessorCache
     get() = cache
 
-  private fun IInArchive.isSingleFileArchive(): Boolean {
-    return (numberOfItems == 1 && archiveFormat == null) || archiveFormat?.supportMultipleFiles() == false
-  }
-
-  private fun SevenZipArchiveHolder.getItemForPath(relativePath: String): ISimpleInArchiveItem {
-    // For single file archives don't look at path
-    return if (archive.isSingleFileArchive()) {
-      simpleInterface.archiveItems.firstOrNull()
-    } else {
-      simpleInterface.archiveItems.firstOrNull {
-        it.ideaPath == relativePath
-      }
-    } ?: throw FileNotFoundException("$file!/$relativePath")
-  }
-
   override fun contentsToByteArray(relativePath: String): ByteArray {
     return getFileHandle().getAndUse { holder ->
-      holder.useStream {
-        val item = holder.getItemForPath(relativePath)
-        if (FileUtilRt.isTooLarge(item.size ?: DEFAULT_LENGTH)) {
-          throw FileTooBigException("$file!/$relativePath")
-        } else {
-          ByteArrayOutputStream(item.size?.toInt() ?: DEFAULT_BUFFER_SIZE).use { stream ->
-            item.extractSlow {
-              stream.write(it)
-              it.size
-            }
-            stream.toByteArray()
+      val item = holder.getItemForPath(relativePath)
+      if (FileUtilRt.isTooLarge(item.size ?: DEFAULT_LENGTH)) {
+        throw FileTooBigException("$file!/$relativePath")
+      } else {
+        ByteArrayOutputStream(item.size?.toInt() ?: SevenZipInputStream.BUFFER_SIZE).use { stream ->
+          item.extractSlow {
+            stream.write(it)
+            it.size
           }
+          stream.toByteArray()
         }
       }
     }
@@ -66,26 +49,22 @@ class SevenZipArchiveHandler(
 
   override fun createEntriesMap(): MutableMap<String, EntryInfo> {
     return getFileHandle().getAndUse { holder ->
-      holder.useStream {
-        val simpleInArchive = holder.simpleInterface
-        val archive = holder.archive
-        if (archive.isSingleFileArchive()) {
-          LinkedHashMap<String, EntryInfo>(2).also { map ->
-            map[""] = createRootEntry()
-            val entry = simpleInArchive.getArchiveItem(0)
-            val path = createEntryNameForSingleArchive(entry)
-            processEntry(map, path) { parent, name ->
-              EntryInfo(name, false, entry.size, entry.creationTime?.time ?: DEFAULT_TIMESTAMP, parent)
-            }
+      if (holder.archive.isSingleFileArchive()) {
+        LinkedHashMap<String, EntryInfo>(2).also { map ->
+          map[""] = createRootEntry()
+          val entry = holder.archiveItems.first()
+          val path = createEntryNameForSingleArchive(entry)
+          processEntry(map, path) { parent, name ->
+            EntryInfo(name, false, entry.size, entry.creationTime?.time ?: DEFAULT_TIMESTAMP, parent)
           }
-        } else {
-          val entries = simpleInArchive.archiveItems
-          LinkedHashMap<String, EntryInfo>(entries.size).also { map ->
-            map[""] = createRootEntry()
-            entries.forEach { entry ->
-              processEntry(map, entry.ideaPath) { parent, name ->
-                EntryInfo(name, false, entry.size, entry.creationTime?.time ?: DEFAULT_TIMESTAMP, parent)
-              }
+        }
+      } else {
+        val entries = holder.archiveItems
+        LinkedHashMap<String, EntryInfo>(entries.size).also { map ->
+          map[""] = createRootEntry()
+          entries.forEach { entry ->
+            processEntry(map, entry.ideaPath) { parent, name ->
+              EntryInfo(name, false, entry.size, entry.creationTime?.time ?: DEFAULT_TIMESTAMP, parent)
             }
           }
         }
@@ -95,16 +74,34 @@ class SevenZipArchiveHandler(
 
   override fun getInputStream(relativePath: String): InputStream {
     return getFileHandle().getAndUse { holder ->
-      val item = holder.getItemForPath(relativePath)
-      SevenZipInputStream(holder, item)
+      holder.inputStream(holder.getItemForPath(relativePath))
     }
   }
 
   override fun getInputStreamForFile(file: VirtualFile): InputStream {
     return getFileHandle().getAndUse { holder ->
       val item = holder.getItemForPath(file.path.split(FSUtils.FS_SEPARATOR).last())
-      SevenZipInputStream(holder, item)
+      holder.inputStream(item)
     }
+  }
+
+  private fun IInArchive.isSingleFileArchive(): Boolean {
+    return (numberOfItems == 1 && archiveFormat == null) || archiveFormat?.supportMultipleFiles() == false
+  }
+
+  private fun SevenZipArchiveHolder.getItemForPath(relativePath: String): ISimpleInArchiveItem {
+    // For single file archives don't look at path
+    return if (archive.isSingleFileArchive()) {
+      archiveItems.firstOrNull()
+    } else {
+      archiveItems.firstOrNull {
+        it.ideaPath == relativePath
+      }
+    } ?: throw FileNotFoundException("$file!/$relativePath")
+  }
+
+  private fun SevenZipArchiveHolder.inputStream(entry: ISimpleInArchiveItem): InputStream {
+    return SevenZipInputStream(this, entry)
   }
 
   private val ISimpleInArchiveItem.ideaPath get() = FSUtils.convertPathToIdea(path)
