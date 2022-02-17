@@ -26,7 +26,9 @@ class SevenZipArchiveHandler(
       if (FileUtilRt.isTooLarge(item.size ?: DEFAULT_LENGTH)) {
         throw FileTooBigException("$file!/$relativePath")
       } else {
-        ByteArrayOutputStream(item.size?.toInt() ?: SevenZipInputStream.BUFFER_SIZE).use { stream ->
+        ByteArrayOutputStream(
+          item.size?.toInt()?.coerceAtLeast(DEFAULT_BUFFER_SIZE) ?: SevenZipInputStream.BUFFER_SIZE
+        ).use { stream ->
           item.extractSlow {
             stream.write(it)
             it.size
@@ -54,21 +56,29 @@ class SevenZipArchiveHandler(
           map[""] = createRootEntry()
           val entry = holder.archiveItems.first()
           val path = createEntryNameForSingleArchive(entry)
-          processEntry(map, path) { parent, name ->
-            EntryInfo(name, false, entry.size, entry.creationTime?.time ?: DEFAULT_TIMESTAMP, parent)
-          }
+          processEntry(map, entry, path)
         }
       } else {
         val entries = holder.archiveItems
         LinkedHashMap<String, EntryInfo>(entries.size).also { map ->
           map[""] = createRootEntry()
           entries.forEach { entry ->
-            processEntry(map, entry.ideaPath) { parent, name ->
-              EntryInfo(name, false, entry.size, entry.creationTime?.time ?: DEFAULT_TIMESTAMP, parent)
-            }
+            processEntry(map, entry, entry.ideaPath)
           }
         }
       }
+    }
+  }
+
+  private fun processEntry(map: Map<String, EntryInfo>, entry: ISimpleInArchiveItem, path: String) {
+    processEntry(map, path) { parent, name ->
+      EntryInfo(
+        name,
+        false,
+        entry.size ?: DEFAULT_LENGTH,
+        entry.creationTime?.time ?: DEFAULT_TIMESTAMP,
+        parent
+      )
     }
   }
 
