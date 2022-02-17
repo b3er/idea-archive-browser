@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.github.b3er"
-version = "0.31"
+version = "0.32"
 
 java {
   toolchain {

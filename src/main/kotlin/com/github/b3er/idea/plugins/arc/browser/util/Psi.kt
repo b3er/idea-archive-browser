@@ -44,9 +44,7 @@ inline fun BasePsiNode<*>.processChildren(
   val project = dir.project
   val fileIndex = ProjectRootManager.getInstance(project).fileIndex
   val module = fileIndex.getModuleForFile(dir.virtualFile)
-  val moduleFileIndex = if (module == null) null else ModuleRootManager.getInstance(
-    module
-  ).fileIndex
+  val moduleFileIndex = if (module == null) null else ModuleRootManager.getInstance(module).fileIndex
   processPsiDirectoryChildren(dir.children, children, moduleFileIndex, settings)
   return children
 }
