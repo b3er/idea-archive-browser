@@ -16,7 +16,7 @@ class ArchivePluginStructureProvider : TreeStructureProvider {
     parent: AbstractTreeNode<*>, children: MutableCollection<AbstractTreeNode<*>>,
     settings: ViewSettings?
   ): MutableCollection<AbstractTreeNode<*>> {
-    return children.asSequence().map { convertArchiveNode(it) }.toCollection(ArrayList())
+    return children.mapTo(ArrayList(children.size), ::convertArchiveNode)
   }
 
   private fun convertArchiveNode(node: AbstractTreeNode<*>): AbstractTreeNode<*> {
