@@ -56,7 +56,7 @@ class SevenZipArchiveHandler(
           map[""] = createRootEntry()
           val entry = holder.archiveItems.first()
           val path = createEntryNameForSingleArchive(entry)
-          processEntry(map, entry, path)
+          processEntry(map, entry, path, isFolder = false)
         }
       } else {
         val entries = holder.archiveItems
@@ -70,11 +70,16 @@ class SevenZipArchiveHandler(
     }
   }
 
-  private fun processEntry(map: Map<String, EntryInfo>, entry: ISimpleInArchiveItem, path: String) {
+  private fun processEntry(
+    map: Map<String, EntryInfo>,
+    entry: ISimpleInArchiveItem,
+    path: String,
+    isFolder: Boolean = entry.isFolder
+  ) {
     processEntry(map, path) { parent, name ->
       EntryInfo(
         name,
-        false,
+        isFolder,
         entry.size ?: DEFAULT_LENGTH,
         entry.creationTime?.time ?: DEFAULT_TIMESTAMP,
         parent
