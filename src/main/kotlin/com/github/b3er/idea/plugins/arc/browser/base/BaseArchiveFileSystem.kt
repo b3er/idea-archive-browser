@@ -7,7 +7,6 @@ import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.impl.ArchiveHandler
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem
 import com.intellij.openapi.vfs.newvfs.VfsImplUtil
 
@@ -18,13 +17,13 @@ abstract class BaseArchiveFileSystem(
   abstract fun getHandlerForPath(localPath: String): BaseArchiveHandler<*>
   abstract fun isCorrectFileType(fileType: FileType): Boolean
 
-  override fun getHandler(entryFile: VirtualFile): ArchiveHandler {
+  override fun getHandler(entryFile: VirtualFile): BaseArchiveHandler<*> {
     return VfsImplUtil.getHandler(this, entryFile) { localPath ->
       getHandlerForPath(localPath)
     }
   }
 
-  override fun getHandlerForFile(file: VirtualFile): ArchiveHandler {
+  override fun getHandlerForFile(file: VirtualFile): BaseArchiveHandler<*> {
     return getHandler(file)
   }
 

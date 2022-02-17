@@ -5,7 +5,10 @@ import com.github.b3er.idea.plugins.arc.browser.base.nest.SupportsStreamForVirtu
 import com.github.b3er.idea.plugins.arc.browser.base.sevenzip.SevenZipInputStream
 import com.google.common.hash.Hashing
 import com.intellij.openapi.application.PathManager
+import com.intellij.openapi.diagnostic.thisLogger
+import com.intellij.openapi.util.io.FileSystemUtil
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.impl.ArchiveHandler
 import com.intellij.util.io.URLUtil
 import net.sf.sevenzipjbinding.ExtractOperationResult
 import org.apache.commons.lang.StringUtils
@@ -32,15 +35,27 @@ object FSUtils {
     }
   }
 
+  private val logger = thisLogger()
+
+  @Suppress("DEPRECATION", "UnstableApiUsage")
   fun copyFileToTemp(file: VirtualFile): File {
     val nestedFilesRoot = File(getPluginTempFolder(), NESTED_FILES_ROOT)
     if (!nestedFilesRoot.exists()) {
       nestedFilesRoot.mkdirs()
     }
-    @Suppress("DEPRECATION", "UnstableApiUsage")
-    val id = Hashing.md5()
+    val handler = (file.fileSystem as? SupportsNestedArchives)?.getHandlerForFile(file)
+
+    val hasher = Hashing.md5()
       .newHasher()
       .putString(file.name, Charset.defaultCharset())
+
+    if (handler?.isSingleFileArchive() == true) {
+      val attributes = FileSystemUtil.getAttributes(handler.file.canonicalFile)
+      hasher.putLong(attributes?.lastModified ?: ArchiveHandler.DEFAULT_TIMESTAMP)
+      hasher.putLong(attributes?.length ?: ArchiveHandler.DEFAULT_LENGTH)
+    }
+
+    val id = hasher
       .putLong(file.timeStamp)
       .putLong(file.length)
       .hash()
@@ -52,7 +67,7 @@ object FSUtils {
     }
 
     val outFile = File(outFolder, file.name)
-    if (!outFile.exists() || outFile.length() != file.length) {
+    if (!outFile.exists()) {
       if (!tryToDirectCopyFile(file, outFile)) {
         val stream = file.inputStream
         file.inputStream.use {

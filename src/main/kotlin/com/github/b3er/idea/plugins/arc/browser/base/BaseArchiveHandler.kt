@@ -14,6 +14,8 @@ abstract class BaseArchiveHandler<T>(path: String) : ArchiveHandler(path) {
   var myFileLength: Long = DEFAULT_LENGTH
   abstract val accessorCache: FileAccessorCache<BaseArchiveHandler<T>, T>
 
+  abstract fun isSingleFileArchive(): Boolean
+
   protected fun getFileHandle(): FileAccessorCache.Handle<T> {
     val handle = accessorCache[this]
     val attributes = file.canonicalFile.let {

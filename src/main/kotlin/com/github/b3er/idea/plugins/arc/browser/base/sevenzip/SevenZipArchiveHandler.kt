@@ -70,6 +70,13 @@ class SevenZipArchiveHandler(
     }
   }
 
+  override fun isSingleFileArchive(): Boolean {
+    return getFileHandle().getAndUse { holder ->
+      holder.archive.isSingleFileArchive()
+    }
+  }
+
+
   private fun processEntry(
     map: Map<String, EntryInfo>,
     entry: ISimpleInArchiveItem,
