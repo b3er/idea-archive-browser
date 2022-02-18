@@ -1,5 +1,6 @@
-package com.github.b3er.idea.plugins.arc.browser.base.sevenzip
+package com.github.b3er.idea.plugins.arc.browser.formats.sevenzip
 
+import com.github.b3er.idea.plugins.arc.browser.base.sevenzip.ReusableRandomAccessFileStream
 import net.sf.sevenzipjbinding.IInArchive
 import net.sf.sevenzipjbinding.IInStream
 import net.sf.sevenzipjbinding.SevenZip

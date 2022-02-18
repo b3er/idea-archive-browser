@@ -1,7 +1,8 @@
-package com.github.b3er.idea.plugins.arc.browser.base.sevenzip
+package com.github.b3er.idea.plugins.arc.browser.formats.sevenzip
 
 import com.github.b3er.idea.plugins.arc.browser.base.BaseArchiveHandler
 import com.github.b3er.idea.plugins.arc.browser.base.nest.SupportsStreamForVirtualFile
+import com.github.b3er.idea.plugins.arc.browser.base.sevenzip.SevenZipInputStream
 import com.github.b3er.idea.plugins.arc.browser.util.FSUtils
 import com.github.b3er.idea.plugins.arc.browser.util.getAndUse
 import com.intellij.openapi.util.io.FileTooBigException
@@ -26,14 +27,16 @@ class SevenZipArchiveHandler(
       if (FileUtilRt.isTooLarge(item.size ?: DEFAULT_LENGTH)) {
         throw FileTooBigException("$file!/$relativePath")
       } else {
-        ByteArrayOutputStream(
-          item.size?.toInt()?.coerceAtLeast(DEFAULT_BUFFER_SIZE) ?: SevenZipInputStream.BUFFER_SIZE
-        ).use { stream ->
-          item.extractSlow {
-            stream.write(it)
-            it.size
+        holder.useStream {
+          ByteArrayOutputStream(
+            item.size?.toInt()?.coerceAtLeast(DEFAULT_BUFFER_SIZE) ?: SevenZipInputStream.BUFFER_SIZE
+          ).use { stream ->
+            item.extractSlow { bytes ->
+              stream.write(bytes)
+              bytes.size
+            }
+            stream.toByteArray()
           }
-          stream.toByteArray()
         }
       }
     }

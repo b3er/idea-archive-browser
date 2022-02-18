@@ -1,6 +1,7 @@
 package com.github.b3er.idea.plugins.arc.browser.base.sevenzip
 
 import com.Ostermiller.util.CircularByteBuffer
+import com.github.b3er.idea.plugins.arc.browser.formats.sevenzip.SevenZipArchiveHolder
 import net.sf.sevenzipjbinding.ExtractOperationResult
 import net.sf.sevenzipjbinding.simple.ISimpleInArchiveItem
 import java.io.File

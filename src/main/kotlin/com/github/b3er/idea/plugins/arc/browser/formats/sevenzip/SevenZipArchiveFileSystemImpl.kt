@@ -1,7 +1,6 @@
 package com.github.b3er.idea.plugins.arc.browser.formats.sevenzip
 
 import com.github.b3er.idea.plugins.arc.browser.base.BaseArchiveFileSystem
-import com.github.b3er.idea.plugins.arc.browser.base.sevenzip.SevenZipArchiveHandler
 import com.github.b3er.idea.plugins.arc.browser.util.FSUtils
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.vfs.VirtualFileManager
