@@ -31,7 +31,6 @@ abstract class BaseArchiveHandler<T>(path: String) : ArchiveHandler(path) {
 
   override fun clearCaches() {
     accessorCache.remove(this)
-    super.clearCaches()
   }
 
   interface CacheProvider<T> {
