@@ -5,13 +5,11 @@ import com.github.b3er.idea.plugins.arc.browser.base.nest.SupportsStreamForVirtu
 import com.github.b3er.idea.plugins.arc.browser.base.sevenzip.SevenZipInputStream
 import com.google.common.hash.Hashing
 import com.intellij.openapi.application.PathManager
-import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.util.io.FileSystemUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.impl.ArchiveHandler
 import com.intellij.util.io.URLUtil
 import net.sf.sevenzipjbinding.ExtractOperationResult
-import org.apache.commons.lang.StringUtils
 import java.io.File
 import java.io.InputStream
 import java.nio.charset.Charset
@@ -23,7 +21,7 @@ object FSUtils {
   private const val NESTED_FILES_ROOT = "archives"
 
   fun isNestedFile(path: String): Boolean {
-    return StringUtils.countMatches(path, FS_SEPARATOR) > 0
+    return path.contains(FS_SEPARATOR)
   }
 
   fun decorateMergedNameWithExtension(fileExtension: String, name: String): String {
@@ -34,8 +32,6 @@ object FSUtils {
       name
     }
   }
-
-  private val logger = thisLogger()
 
   @Suppress("DEPRECATION", "UnstableApiUsage")
   fun copyFileToTemp(file: VirtualFile): File {

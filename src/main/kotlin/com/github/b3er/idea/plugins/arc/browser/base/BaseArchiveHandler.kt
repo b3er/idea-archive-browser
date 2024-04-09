@@ -3,6 +3,7 @@ package com.github.b3er.idea.plugins.arc.browser.base
 import com.intellij.openapi.util.io.FileSystemUtil
 import com.intellij.openapi.vfs.impl.ArchiveHandler
 import com.intellij.util.io.FileAccessorCache
+import org.jetbrains.annotations.ApiStatus
 import java.io.Closeable
 import java.io.FileNotFoundException
 
@@ -24,13 +25,15 @@ abstract class BaseArchiveHandler<T>(path: String) : ArchiveHandler(path) {
     if (attributes.lastModified == myFileStamp && attributes.length == myFileLength) {
       return handle
     }
-    clearCaches()
+    accessorCache.remove(this)
     handle.release()
     return accessorCache[this]
   }
 
+  @ApiStatus.OverrideOnly
   override fun clearCaches() {
     accessorCache.remove(this)
+    super.clearCaches()
   }
 
   interface CacheProvider<T> {
@@ -38,7 +41,7 @@ abstract class BaseArchiveHandler<T>(path: String) : ArchiveHandler(path) {
   }
 
   companion object {
-    fun <T> cacheProvider(
+    fun <T : Any> cacheProvider(
       protectedQueueSize: Int = 20,
       probationalQueueSize: Int = 20,
       onCreate: (key: BaseArchiveHandler<T>) -> T,
@@ -55,7 +58,7 @@ abstract class BaseArchiveHandler<T>(path: String) : ArchiveHandler(path) {
 
     }
 
-    fun <T> createCache(
+    fun <T : Any> createCache(
       protectedQueueSize: Int = 20,
       probationalQueueSize: Int = 20,
       onCreate: (key: BaseArchiveHandler<T>) -> T,

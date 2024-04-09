@@ -1,7 +1,7 @@
 [versions]
 commons-compress = "1.21"
-intellij = "1.4.0"
-kotlin = "1.6.10"
+intellij = "1.10.1"
+kotlin = "1.6.20"
 junit = "5.6.0"
 sevenzip = "16.02-2.01"
 
