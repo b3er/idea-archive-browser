@@ -7,7 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 
 interface BaseArchiveFileType : FileType {
-  fun createPsiNode(
-    project: Project?, value: PsiFile, viewSettings: ViewSettings?
-  ): PsiFileNode
+    fun createPsiNode(
+        project: Project?, value: PsiFile, viewSettings: ViewSettings?
+    ): PsiFileNode
 }

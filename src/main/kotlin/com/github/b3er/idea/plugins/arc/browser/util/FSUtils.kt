@@ -17,105 +17,105 @@ import java.nio.file.Files
 
 
 object FSUtils {
-  const val FS_SEPARATOR = URLUtil.JAR_SEPARATOR
-  private const val NESTED_FILES_ROOT = "archives"
+    const val FS_SEPARATOR = URLUtil.JAR_SEPARATOR
+    private const val NESTED_FILES_ROOT = "archives"
 
-  fun isNestedFile(path: String): Boolean {
-    return path.contains(FS_SEPARATOR)
-  }
-
-  fun decorateMergedNameWithExtension(fileExtension: String, name: String): String {
-    val extension = MERGED_ARCHIVE_EXTENSIONS[fileExtension.toLowerCase()]
-    return if (extension != null && !name.endsWith(extension, ignoreCase = true)) {
-      "$name.$extension"
-    } else {
-      name
-    }
-  }
-
-  @Suppress("DEPRECATION", "UnstableApiUsage")
-  fun copyFileToTemp(file: VirtualFile): File {
-    val nestedFilesRoot = File(getPluginTempFolder(), NESTED_FILES_ROOT)
-    if (!nestedFilesRoot.exists()) {
-      nestedFilesRoot.mkdirs()
-    }
-    val handler = (file.fileSystem as? SupportsNestedArchives)?.getHandlerForFile(file)
-
-    val hasher = Hashing.md5()
-      .newHasher()
-      .putString(file.name, Charset.defaultCharset())
-
-    if (handler?.isSingleFileArchive() == true) {
-      val attributes = FileSystemUtil.getAttributes(handler.file.canonicalFile)
-      hasher.putLong(attributes?.lastModified ?: ArchiveHandler.DEFAULT_TIMESTAMP)
-      hasher.putLong(attributes?.length ?: ArchiveHandler.DEFAULT_LENGTH)
+    fun isNestedFile(path: String): Boolean {
+        return path.contains(FS_SEPARATOR)
     }
 
-    val id = hasher
-      .putLong(file.timeStamp)
-      .putLong(file.length)
-      .hash()
-      .toString()
-
-    val outFolder = File(nestedFilesRoot, id)
-    if (!outFolder.exists()) {
-      outFolder.mkdirs()
-    }
-
-    val outFile = File(outFolder, file.name)
-    if (!outFile.exists()) {
-      if (!tryToDirectCopyFile(file, outFile)) {
-        val stream = file.inputStream
-        file.inputStream.use {
-          Files.copy(stream, outFile.toPath())
+    fun decorateMergedNameWithExtension(fileExtension: String, name: String): String {
+        val extension = MERGED_ARCHIVE_EXTENSIONS[fileExtension.lowercase()]
+        return if (extension != null && !name.endsWith(extension, ignoreCase = true)) {
+            "$name.$extension"
+        } else {
+            name
         }
-      }
     }
-    return outFile
-  }
 
-  private fun getPluginTempFolder(): File {
-    val tmpDir = PathManager.getTempPath()
-    return File(tmpDir, PluginUtils.PLUGIN_NAME)
-  }
-
-  private fun tryToDirectCopyFile(file: VirtualFile, outFile: File): Boolean {
-    return tryToGetCompressStream(file)?.let { stream ->
-      if (stream is SevenZipInputStream) {
-        stream.extract(outFile) == ExtractOperationResult.OK
-      } else {
-        stream.use {
-          outFile.outputStream().use { output ->
-            stream.copyTo(output) == file.length
-          }
+    @Suppress("DEPRECATION", "UnstableApiUsage")
+    fun copyFileToTemp(file: VirtualFile): File {
+        val nestedFilesRoot = File(getPluginTempFolder(), NESTED_FILES_ROOT)
+        if (!nestedFilesRoot.exists()) {
+            nestedFilesRoot.mkdirs()
         }
-      }
-    } ?: false
-  }
+        val handler = (file.fileSystem as? SupportsNestedArchives)?.getHandlerForFile(file)
 
-  private fun tryToGetCompressStream(file: VirtualFile): InputStream? {
-    return (file.fileSystem as? SupportsNestedArchives)?.let { fs ->
-      (fs.getHandlerForFile(file) as? SupportsStreamForVirtualFile)?.getInputStreamForFile(file)
+        val hasher = Hashing.md5()
+            .newHasher()
+            .putString(file.name, Charset.defaultCharset())
+
+        if (handler?.isSingleFileArchive() == true) {
+            val attributes = FileSystemUtil.getAttributes(handler.file.canonicalFile)
+            hasher.putLong(attributes?.lastModified ?: ArchiveHandler.DEFAULT_TIMESTAMP)
+            hasher.putLong(attributes?.length ?: ArchiveHandler.DEFAULT_LENGTH)
+        }
+
+        val id = hasher
+            .putLong(file.timeStamp)
+            .putLong(file.length)
+            .hash()
+            .toString()
+
+        val outFolder = File(nestedFilesRoot, id)
+        if (!outFolder.exists()) {
+            outFolder.mkdirs()
+        }
+
+        val outFile = File(outFolder, file.name)
+        if (!outFile.exists()) {
+            if (!tryToDirectCopyFile(file, outFile)) {
+                val stream = file.inputStream
+                file.inputStream.use {
+                    Files.copy(stream, outFile.toPath())
+                }
+            }
+        }
+        return outFile
     }
-  }
 
-  fun convertPathToIdea(path: String?): String {
-    return path?.replace('\\', '/') ?: ""
-  }
+    private fun getPluginTempFolder(): File {
+        val tmpDir = PathManager.getTempPath()
+        return File(tmpDir, PluginUtils.PLUGIN_NAME)
+    }
 
-  private val MERGED_ARCHIVE_EXTENSIONS = mapOf(
-    "tgz" to "tar",
-    "tlz" to "tar",
-    "tZ" to "tar",
-    "taZ" to "tar",
-    "tlz" to "tar",
-    "tzst" to "tar",
-    "tb2" to "tar",
-    "tbz" to "tar",
-    "tbz2" to "tar",
-    "tz2" to "tar",
-    "taz" to "tar",
-  )
+    private fun tryToDirectCopyFile(file: VirtualFile, outFile: File): Boolean {
+        return tryToGetCompressStream(file)?.let { stream ->
+            if (stream is SevenZipInputStream) {
+                stream.extract(outFile) == ExtractOperationResult.OK
+            } else {
+                stream.use {
+                    outFile.outputStream().use { output ->
+                        stream.copyTo(output) == file.length
+                    }
+                }
+            }
+        } ?: false
+    }
+
+    private fun tryToGetCompressStream(file: VirtualFile): InputStream? {
+        return (file.fileSystem as? SupportsNestedArchives)?.let { fs ->
+            (fs.getHandlerForFile(file) as? SupportsStreamForVirtualFile)?.getInputStreamForFile(file)
+        }
+    }
+
+    fun convertPathToIdea(path: String?): String {
+        return path?.replace('\\', '/') ?: ""
+    }
+
+    private val MERGED_ARCHIVE_EXTENSIONS = mapOf(
+        "tgz" to "tar",
+        "tlz" to "tar",
+        "tZ" to "tar",
+        "taZ" to "tar",
+        "tlz" to "tar",
+        "tzst" to "tar",
+        "tb2" to "tar",
+        "tbz" to "tar",
+        "tbz2" to "tar",
+        "tz2" to "tar",
+        "taz" to "tar",
+    )
 }
 
 

@@ -4,5 +4,5 @@ import com.intellij.openapi.vfs.VirtualFile
 import java.io.InputStream
 
 interface SupportsStreamForVirtualFile {
-  fun getInputStreamForFile(file: VirtualFile): InputStream
+    fun getInputStreamForFile(file: VirtualFile): InputStream
 }

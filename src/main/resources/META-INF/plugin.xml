@@ -6,14 +6,14 @@
     <depends>com.intellij.modules.lang</depends>
     <extensions defaultExtensionNs="com.intellij">
         <treeStructureProvider
-            implementation="com.github.b3er.idea.plugins.arc.browser.ArchivePluginStructureProvider" />
+                implementation="com.github.b3er.idea.plugins.arc.browser.ArchivePluginStructureProvider"/>
         <fileType name="ARCHIVE_7ZIP"
-            extensions="rar;deb;tar;lzma;cpio;bz2;7z;xz;arj;iso;lzh;msi;rpm;squashfs;sfs;xar;z;vmdk;wim;vhd;vdi;uefi;udf;hfs;dmg;ext;fat;ntfs;chm;cab;udf;txz;tlz;gem;gz;tar;tgz;tb2;tbz;tbz2;tz2;taz;tlz;tZ;taZ;tlz;tzst"
-            fieldName="INSTANCE"
-            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.sevenzip.SevenZipArchiveFileType" />
+                  extensions="rar;deb;tar;lzma;cpio;bz2;7z;xz;arj;iso;lzh;msi;rpm;squashfs;sfs;xar;z;vmdk;wim;vhd;vdi;uefi;udf;hfs;dmg;ext;fat;ntfs;chm;cab;udf;txz;tlz;gem;gz;tar;tgz;tb2;tbz;tbz2;tz2;taz;tlz;tZ;taZ;tlz;tzst"
+                  fieldName="INSTANCE"
+                  implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.sevenzip.SevenZipArchiveFileType"/>
         <virtualFileSystem
-            implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.sevenzip.SevenZipArchiveFileSystemImpl"
-            key="7z" />
+                implementationClass="com.github.b3er.idea.plugins.arc.browser.formats.sevenzip.SevenZipArchiveFileSystemImpl"
+                key="7z"/>
     </extensions>
     <description>
         This plugin allows you to browse most archives like folders in IDEA.

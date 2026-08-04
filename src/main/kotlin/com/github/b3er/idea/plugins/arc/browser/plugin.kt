@@ -12,39 +12,39 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.psi.PsiManager
 
 class ArchivePluginStructureProvider : TreeStructureProvider {
-  override fun modify(
-    parent: AbstractTreeNode<*>, children: MutableCollection<AbstractTreeNode<*>>,
-    settings: ViewSettings?
-  ): MutableCollection<AbstractTreeNode<*>> {
-    return children.mapTo(ArrayList(children.size), ::convertArchiveNode)
-  }
-
-  private fun convertArchiveNode(node: AbstractTreeNode<*>): AbstractTreeNode<*> {
-    if (node is PsiFileNode) {
-      val virtualFile = node.virtualFile
-      if (virtualFile != null) {
-        try {
-          var psiFile = node.value
-          if ((psiFile.fileType is BaseArchiveFileType || psiFile.fileType is ArchiveFileType)
-            && FSUtils.isNestedFile(virtualFile.path)
-          ) {
-            val tempNestedFile = FSUtils.copyFileToTemp(virtualFile)
-            val nestedVirtualFile = LocalFileSystem.getInstance().findFileByIoFile(tempNestedFile)
-            if (nestedVirtualFile != null) {
-              psiFile = PsiManager.getInstance(node.project!!).findFile(nestedVirtualFile)
-            }
-          }
-          return when (val fileType = node.virtualFile?.fileType) {
-            is BaseArchiveFileType -> fileType.createPsiNode(node.project, psiFile, node.settings)
-            is ArchiveFileType -> PsiZipFileNode(node.project, psiFile, node.settings)
-            else -> node
-          }
-        } catch (t: Throwable) {
-          // return the original node in case of any error
-          return node
-        }
-      }
+    override fun modify(
+        parent: AbstractTreeNode<*>, children: MutableCollection<AbstractTreeNode<*>>,
+        settings: ViewSettings?
+    ): MutableCollection<AbstractTreeNode<*>> {
+        return children.mapTo(ArrayList(children.size), ::convertArchiveNode)
     }
-    return node
-  }
+
+    private fun convertArchiveNode(node: AbstractTreeNode<*>): AbstractTreeNode<*> {
+        if (node is PsiFileNode) {
+            val virtualFile = node.virtualFile
+            if (virtualFile != null) {
+                try {
+                    var psiFile = node.value
+                    if ((psiFile.fileType is BaseArchiveFileType || psiFile.fileType is ArchiveFileType)
+                        && FSUtils.isNestedFile(virtualFile.path)
+                    ) {
+                        val tempNestedFile = FSUtils.copyFileToTemp(virtualFile)
+                        val nestedVirtualFile = LocalFileSystem.getInstance().findFileByIoFile(tempNestedFile)
+                        if (nestedVirtualFile != null) {
+                            psiFile = PsiManager.getInstance(node.project!!).findFile(nestedVirtualFile)
+                        }
+                    }
+                    return when (val fileType = node.virtualFile?.fileType) {
+                        is BaseArchiveFileType -> fileType.createPsiNode(node.project, psiFile, node.settings)
+                        is ArchiveFileType -> PsiZipFileNode(node.project, psiFile, node.settings)
+                        else -> node
+                    }
+                } catch (t: Throwable) {
+                    // return the original node in case of any error
+                    return node
+                }
+            }
+        }
+        return node
+    }
 }

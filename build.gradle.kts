@@ -1,7 +1,5 @@
-import org.jetbrains.intellij.tasks.PatchPluginXmlTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     java
     alias(libs.plugins.kotlin.jvm)
@@ -9,16 +7,10 @@ plugins {
 }
 
 group = "com.github.b3er"
-version = "0.32"
+version = "0.33"
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
-    }
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "11"
+kotlin {
+    jvmToolchain(17)
 }
 
 tasks.test {
@@ -27,25 +19,32 @@ tasks.test {
 
 repositories {
     mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 dependencies {
     implementation(libs.sevenzip)
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-}
 
-intellij {
-    pluginName.set("idea-archive-browser")
-    version.set("2022.2")
-    type.set("IC")
-    plugins.add("IntelliLang")
-    tasks {
-        buildSearchableOptions {
-            enabled = false
-        }
+    intellijPlatform {
+        intellijIdea("2026.2.0.1")
     }
 }
 
-tasks.withType<PatchPluginXmlTask> {
-    untilBuild.set("")
+intellijPlatform {
+    pluginConfiguration {
+        name = "archive-browser-idea"
+        ideaVersion {
+            sinceBuild.set("251")
+        }
+    }
+    pluginVerification {
+        freeArgs = listOf("-mute", "TemplateWordInPluginName")
+        ides {
+            create(IntelliJPlatformType.IntellijIdeaCommunity, "2025.1")
+            create(IntelliJPlatformType.IntellijIdea, "2026.2.0.1")
+        }
+    }
 }
