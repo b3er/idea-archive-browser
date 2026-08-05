@@ -35,7 +35,7 @@ dependencies {
 
 intellijPlatform {
     pluginConfiguration {
-        name = "archive-browser-idea"
+        name = "Archive Browser"
         ideaVersion {
             sinceBuild.set("251")
         }

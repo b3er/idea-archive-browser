@@ -8,6 +8,7 @@ import com.intellij.ide.projectView.TreeStructureProvider
 import com.intellij.ide.projectView.ViewSettings
 import com.intellij.ide.projectView.impl.nodes.PsiFileNode
 import com.intellij.ide.util.treeView.AbstractTreeNode
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.psi.PsiManager
 
@@ -40,11 +41,15 @@ class ArchivePluginStructureProvider : TreeStructureProvider {
                         else -> node
                     }
                 } catch (t: Throwable) {
-                    // return the original node in case of any error
+                    LOG.warn("Failed to create archive node for ${virtualFile.path}", t)
                     return node
                 }
             }
         }
         return node
+    }
+
+    private companion object {
+        val LOG = Logger.getInstance(ArchivePluginStructureProvider::class.java)
     }
 }

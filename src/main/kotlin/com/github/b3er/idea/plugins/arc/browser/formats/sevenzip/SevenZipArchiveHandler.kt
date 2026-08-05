@@ -28,7 +28,7 @@ class SevenZipArchiveHandler(
         return getFileHandle().getAndUse { holder ->
             val item = holder.getItemForPath(relativePath)
             @Suppress("UnstableApiUsage")
-            if (FileSizeLimit.isTooLarge(item.size ?: DEFAULT_LENGTH, null)) {
+            if ((item.size ?: DEFAULT_LENGTH) > FileSizeLimit.getContentLoadLimit(null)) {
                 throw FileTooBigException("$path/$relativePath")
             } else {
                 holder.useStream {

@@ -22,6 +22,11 @@
     <change-notes><![CDATA[
         <html>
         <ul>
+            <li>Version 0.33
+                <ul>
+                    <li>Fixed compatibility with IntelliJ IDEA 2026.2</li>
+                </ul>
+            </li>
             <li>Version 0.32
                 <ul>
                     <li>Apple silicon support (experimental)</li>
