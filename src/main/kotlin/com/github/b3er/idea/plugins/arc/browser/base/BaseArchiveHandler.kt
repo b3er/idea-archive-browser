@@ -2,13 +2,12 @@ package com.github.b3er.idea.plugins.arc.browser.base
 
 import com.intellij.openapi.util.io.FileSystemUtil
 import com.intellij.openapi.util.io.toCanonicalPath
-import com.intellij.openapi.vfs.impl.ArchiveHandler
 import com.intellij.util.io.FileAccessorCache
 import org.jetbrains.annotations.ApiStatus
 import java.io.Closeable
 import java.io.FileNotFoundException
 
-abstract class BaseArchiveHandler<T>(path: String) : ArchiveHandler(path) {
+abstract class BaseArchiveHandler<T>(path: String) : EntryInfoFreeArchiveHandler(path) {
     @Volatile
     var myFileStamp: Long = DEFAULT_TIMESTAMP
 
@@ -34,7 +33,6 @@ abstract class BaseArchiveHandler<T>(path: String) : ArchiveHandler(path) {
     @ApiStatus.OverrideOnly
     override fun clearCaches() {
         accessorCache.remove(this)
-        super.clearCaches()
     }
 
     interface CacheProvider<T> {

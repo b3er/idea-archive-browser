@@ -27,6 +27,8 @@ repositories {
 dependencies {
     implementation(libs.sevenzip)
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    testImplementation(libs.bundles.testing)
+    testRuntimeOnly(libs.junit.engine)
 
     intellijPlatform {
         intellijIdea("2026.2.0.1")

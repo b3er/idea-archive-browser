@@ -14,6 +14,7 @@ sevenzip = { module = "net.sf.sevenzipjbinding:sevenzipjbinding", version.ref = 
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
 junit-library = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
 
 [bundles]
 testing = ["junit-library", "kotlin-test", "kotlin-test-junit5"]
